@@ -178,14 +178,14 @@ class Board(object):
 
         value = None
 
-        #find number of rows, columns, and diagonals with 5 black in a row
+        #find number of rows, columns, and diagonals with 5 black in a row and no white next to it
         num5Black = 0
         num4Black = 0
         num3Black = 0
         num2Black = 0
         num1black = 0
 
-        #find number of rows, columns, and diagonals with 5 white in a row
+        #find number of rows, columns, and diagonals with 5 white in a row and not black  next to it
         num5White = 0
         num4White = 0
         num3White = 0
