@@ -195,7 +195,8 @@ class Board(object):
 
         checkHoriz(board)
         checkVert(board)
-        checkDiag(board)
+        checkDiag1(board)
+        checkDiag2(board)
 
         if num5Black > 0 and board.whoseTurn() == 0:
             return float('inf')
@@ -327,7 +328,7 @@ class Board(object):
                 tempCount = 0
 
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
-                if ((left1 == turn or left1==2) and (right2 == turn or right2==2) and (right3 == turn or right3==2) and (right4 == turn or right4==2)):
+                if ((left1 == turn or left1==2) and (right1 == turn or right1==2) and (right2 == turn or right2==2) and (right3 == turn or right3==2)):
                     #increase tempCount for the number of actual spaces filled with player's stone
                     if left1 ==turn:
                         tempCount+=1
@@ -470,7 +471,7 @@ class Board(object):
                 tempCount = 0
 
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
-                if ((up1 == turn or up1==2) and (down2 == turn or down2==2) and (down3 == turn or down3==2) and (down4 == turn or down4==2)):
+                if ((up1 == turn or up1==2) and (down1 == turn or down1==2) and (down2 == turn or down2==2) and (down3 == turn or down3==2)):
                     #increase tempCount for the number of actual spaces filled with player's stone
                     if up1 ==turn:
                         tempCount+=1
@@ -613,7 +614,7 @@ class Board(object):
                 tempCount = 0
 
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
-                if ((leftUp1 == turn or leftUp1==2) and (rightDown2 == turn or rightDown2==2) and (rightDown3 == turn or rightDown3==2) and (rightDown4 == turn or rightDown4==2)):
+                if ((leftUp1 == turn or leftUp1==2) and (rightDown1 == turn or rightDown1==2) and (rightDown2 == turn or rightDown2==2) and (rightDown3 == turn or rightDown3==2)):
                     #increase tempCount for the number of actual spaces filled with player's stone
                     if leftUp1 ==turn:
                         tempCount+=1
@@ -642,3 +643,143 @@ class Board(object):
 
     #check / diagonal
     def checkDiag2(board):
+        #define whose turn it is
+        turn = board.whoseTurn()
+
+        dcount2 = 0
+        dcount3 = 0
+        dcount4 = 0
+        dcount5 = 0
+        diagonalCount = 0
+
+        #go through eat space and check which ones are viable
+        for space in range(0,225):
+
+            #look at spaces 0 rightDown 4 rightUp
+            if (board.getSpaces()[space].getPosition()[1]-4)>0:         @#TODO fix boarder cases
+                rightUp1=board.getSpaces()[space-14].getOccupiedBy()
+                rightUp2=board.getSpaces()[space-28].getOccupiedBy()
+                rightUp3=board.getSpaces()[space-42].getOccupiedBy()
+                rightUp4=board.getSpaces()[space-56].getOccupiedBy()
+
+                tempCount =0
+                #check to make sure all these spaces are either blank or the color of the player whose turn it is
+                if ((rightUp1 == turn or rightUp1==2) and (rightUp2 == turn or rightUp2==2) and (rightUp3 == turn or rightUp3==2) and (rightUp4 == turn or rightUp4==2)):
+                    #increase tempCount for the number of actual spaces filled with player's stone
+                    if rightUp1 ==turn:
+                        tempCount+=1
+                    if rightUp2==turn:
+                        tempCount+=1
+                    if rightUp3==turn:
+                        tempCount+=1
+                    if rightUp4==turn:
+                        tempCount+=1
+                #Replace diagonalCount with tempcount if tempcount is larger
+                if tempCount>diagonalCount:
+                    diagonalCount = tempCount + 1
+
+            #look at spaces 0 rightUp 4 rightDown
+            if (15-board.getSpaces()[space].getPosition[1])>4:
+                leftDown1=board.getSpaces()[space+14].getOccupiedBy()
+                leftDown2=board.getSpaces()[space+28].getOccupiedBy()
+                leftDown3=board.getSpaces()[space+42].getOccupiedBy()
+                leftDown4=board.getSpaces()[space+56].getOccupiedBy()
+                tempCount=0
+
+                #check to make sure all these spaces are either blank or the color of the player whose turn it is
+                if ((leftDown1 == turn or leftDown1==2) and (leftDown2 == turn or leftDown2==2) and (leftDown3 == turn or leftDown3==2) and (leftDown4 == turn or leftDown4==2)):
+                    #increase tempCount for the number of actual spaces filled with player's stone
+                    if leftDown1 ==turn:
+                        tempCount+=1
+                    if leftDown3==turn:
+                        tempCount+=1
+                    if leftDown3==turn:
+                        tempCount+=1
+                    if leftDown4==turn:
+                        tempCount+=1
+                #Replace diagonalCount with tempcount if tempcount is larger
+                if tempCount>diagonalCount:
+                    diagonalCount = tempCount + 1
+
+            #look at spaces 3 rightUp 1 rightDown
+            if (board.getSpaces()[space].getPosition()[1]-3)>0:
+                rightUp1=board.getSpaces()[space-14].getOccupiedBy()
+                rightUp2=board.getSpaces()[space-28].getOccupiedBy()
+                rightUp3=board.getSpaces()[space-42].getOccupiedBy()
+                leftDown1=board.getSpaces()[space+14].getOccupiedBy()
+
+                tempCount =0
+                #check to make sure all these spaces are either blank or the color of the player whose turn it is
+                if ((rightUp1 == turn or rightUp1==2) and (rightUp2 == turn or rightUp2==2) and (rightUp3 == turn or rightUp3==2) and (leftDown1 == turn or leftDown1==2)):
+                    #increase tempCount for the number of actual spaces filled with player's stone
+                    if rightUp1 ==turn:
+                        tempCount+=1
+                    if rightUp2==turn:
+                        tempCount+=1
+                    if rightUp3==turn:
+                        tempCount+=1
+                    if leftDown1==turn:
+                        tempCount+=1
+                #Replace diagonalCount with tempcount if tempcount is larger
+                if tempCount>diagonalCount:
+                    diagonalCount = tempCount + 1
+
+
+            #look at spaces 2 rightUp 2 rightDown
+            if (board.getSpaces()[space].getPosition()[1]-2)>0:
+                rightUp1=board.getSpaces()[space-14].getOccupiedBy()
+                rightUp2=board.getSpaces()[space-28].getOccupiedBy()
+                leftDown1=board.getSpaces()[space+14].getOccupiedBy()
+                leftDown2=board.getSpaces()[space+28].getOccupiedBy()
+                tempCount = 0
+                #check to make sure all these spaces are either blank or the color of the player whose turn it is
+                if ((rightUp1 == turn or rightUp1==2) and (rightUp2 == turn or rightUp2==2) and (leftDown1 == turn or leftDown1==2) and (leftDown2 == turn or leftDown2==2)):
+                    #increase tempCount for the number of actual spaces filled with player's stone
+                    if rightUp1 ==turn:
+                        tempCount+=1
+                    if rightUp2==turn:
+                        tempCount+=1
+                    if leftDown1==turn:
+                        tempCount+=1
+                    if leftDown2==turn:
+                        tempCount+=1
+                #Replace diagonalCount with tempcount if tempcount is larger
+                if tempCount>diagonalCount:
+                    diagonalCount = tempCount + 1
+
+
+            #look at spaces 1 rightUp 3 rightDown
+            if (board.getSpaces()[space].getPosition()[1]-1)>0:
+                rightUp1=board.getSpaces()[space-14].getOccupiedBy()
+                leftDown1=board.getSpaces()[space+14].getOccupiedBy()
+                leftDown2=board.getSpaces()[space+28].getOccupiedBy()
+                leftDown3=board.getSpaces()[space+42].getOccupiedBy()
+                tempCount = 0
+
+                #check to make sure all these spaces are either blank or the color of the player whose turn it is
+                if ((rightUp1 == turn or rightUp1==2) and (leftDown1 == turn or leftDown1==2) and (leftDown2 == turn or leftDown2==2) and (leftDown3 == turn or leftDown3==2)):
+                    #increase tempCount for the number of actual spaces filled with player's stone
+                    if rightUp1 ==turn:
+                        tempCount+=1
+                    if leftDown1==turn:
+                        tempCount+=1
+                    if leftDown2==turn:
+                        tempCount+=1
+                    if leftDown3==turn:
+                        tempCount+=1
+                #Replace diagonalCount with tempcount if tempcount is larger
+                if tempCount>diagonalCount:
+                    diagonalCount = tempCount + 1
+
+            #Increase specific count based on the best diagonalCount found
+            if(diagonalCount == 2):
+                dcount2++
+            elif(diagonalCount == 3):
+                dcount3++
+            elif(diagonalCount == 4):
+                dcount4++
+            elif(diagonalCount == 5):
+                dcount5++
+
+        #returns the number of vertical rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        return (dcount2, dcount3, dcount4, dcount5)
