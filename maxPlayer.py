@@ -10,3 +10,8 @@ class MaxPlayer(object):
         @# TODO: implement Minimax w/ alpha beta pruning
 
         return (xPos,yPos)
+
+
+    
+
+   		

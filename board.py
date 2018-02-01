@@ -184,7 +184,7 @@ class Board(object):
         num4Black = 0
         num3Black = 0
         num2Black = 0
-        num1black = 0
+        num1Black = 0
 
         #find number of rows, columns, and diagonals with 5 white in a row and not black  next to it
         num5White = 0
@@ -193,10 +193,55 @@ class Board(object):
         num2White = 0
         num1White = 0
 
-        checkHoriz(board)
-        checkVert(board)
-        checkDiag1(board)
-        checkDiag2(board)
+        b1, b2, b3, b4, b5 = checkHoriz(board, 0)
+        num1Black += b1
+        num2Black += b2
+        num3Black += b3
+        num4Black += b4
+        num5Black += b5
+        b1, b2, b3, b4, b5 = checkVert(board, 0)
+        num1Black += b1
+        num2Black += b2
+        num3Black += b3
+        num4Black += b4
+        num5Black += b5
+        b1, b2, b3, b4, b5 = checkDiag1(board, 0)
+        num1Black += b1
+        num2Black += b2
+        num3Black += b3
+        num4Black += b4
+        num5Black += b5
+        b1,  b2, b3, b4, b5 = checkDiag2(board, 0)
+        num1Black += b1
+        num2Black += b2
+        num3Black += b3
+        num4Black += b4
+        num5Black += b5
+
+        w1, w2, w3, w4, w5 = checkHoriz(board, 1)
+        num1White += w1
+        num2White += w2
+        num3White += w3
+        num4White += w4
+        num5White += w5
+        w1, w2, w3, w4, w5 = checkVert(board, 1)
+        num1White += w1
+        num2White += w2
+        num3White += w3
+        num4White += w4
+        num5White += w5
+        w1, w2, w3, w4, w5 = checkDiag1(board, 1)
+        num1White += w1
+        num2White += w2
+        num3White += w3
+        num4White += w4
+        num5White += w5
+        w1, w2, w3, w4, w5 = checkDiag2(board, 1)
+        num1White += w1
+        num2White += w2
+        num3White += w3
+        num4White += w4
+        num5White += w5
 
         if num5Black > 0 and board.whoseTurn() == 0:
             return float('inf')
@@ -207,16 +252,15 @@ class Board(object):
         elif num5White > 0 and board.whoseTurn() == 1:
             return float('inf')
         else:
-            value = 123456789876543234567876543456 #eval function
+            value = (1000 * num4Black + 100 * num3Black + 10 * num2Black + num1Black) - (1000 * num4White + 100 * num3White + 10 * num2White + num1White) #eval function
 
 
         return value
 
     #check horizontal
-    def checkHoriz(board):
-        #define whose turn it is
-        turn = board.whoseTurn()
+    def checkHoriz(board, turn):
 
+        hcount1 = 0
         hcount2 = 0
         hcount3 = 0
         hcount4 = 0
@@ -343,7 +387,9 @@ class Board(object):
                     horizontalCount = tempCount + 1
 
             #Increase specific count based on the best horizontalCount found
-            if(horizontalCount == 2):
+            if(horizontalCount == 1):
+                hcount1++
+            elif(horizontalCount == 2):
                 hcount2++
             elif(horizontalCount == 3):
                 hcount3++
@@ -353,13 +399,12 @@ class Board(object):
                 hcount5++
 
         #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
-        return (hcount2, hcount3, hcount4, hcount5)
+        return (hcount1, hcount2, hcount3, hcount4, hcount5)
 
     #check vertical
-    def checkVert(board):
-        #define whose turn it is
-        turn = board.whoseTurn()
+    def checkVert(board, turn):
 
+        vcount1 = 0
         vcount2 = 0
         vcount3 = 0
         vcount4 = 0
@@ -486,7 +531,9 @@ class Board(object):
                     verticalCount = tempCount + 1
 
             #Increase specific count based on the best verticalCount found
-            if(verticalCount == 2):
+            if(verticalCount == 1):
+                vcount1++
+            elif(verticalCount == 2):
                 vcount2++
             elif(verticalCount == 3):
                 vcount3++
@@ -496,13 +543,12 @@ class Board(object):
                 vcount5++
 
         #returns the number of vertical rows that have a chance of winning and have 2, 3, 4, or 5 columns
-        return (vcount2, vcount3, vcount4, vcount5)
+        return (vcount1, vcount2, vcount3, vcount4, vcount5)
 
     #check \ vertical
-    def checkDiag1(board):
-        #define whose turn it is
-        turn = board.whoseTurn()
+    def checkDiag1(board, turn):
 
+        dcount1 = 0
         dcount2 = 0
         dcount3 = 0
         dcount4 = 0
@@ -513,7 +559,7 @@ class Board(object):
         for space in range(0,225):
 
             #look at spaces 0 rightDown 4 leftUp
-            if (board.getSpaces()[space].getPosition()[1]-4)>0:         @#TODO fix boarder cases
+            if (board.getSpaces()[space].getPosition()[0]-4)>0 and (board.getSpaces()[space].getPosition()[1]-4)>0:         @#TODO fix boarder cases
                 leftUp1=board.getSpaces()[space-16].getOccupiedBy()
                 leftUp2=board.getSpaces()[space-32].getOccupiedBy()
                 leftUp3=board.getSpaces()[space-48].getOccupiedBy()
@@ -536,7 +582,7 @@ class Board(object):
                     diagonalCount = tempCount + 1
 
             #look at spaces 0 leftUp 4 rightDown
-            if (15-board.getSpaces()[space].getPosition[1])>4:
+            if (15-board.getSpaces()[space].getPosition[0])>4 and (15-board.getSpaces()[space].getPosition()[1])>4:
                 rightDown1=board.getSpaces()[space+16].getOccupiedBy()
                 rightDown2=board.getSpaces()[space+32].getOccupiedBy()
                 rightDown3=board.getSpaces()[space+48].getOccupiedBy()
@@ -559,7 +605,7 @@ class Board(object):
                     diagonalCount = tempCount + 1
 
             #look at spaces 3 leftUp 1 rightDown
-            if (board.getSpaces()[space].getPosition()[1]-3)>0:
+            if (board.getSpaces()[space].getPosition()[0]-3)>0 and (board.getSpaces()[space].getPosition()[1]-3)>0 (15-board.getSpaces()[space].getPosition[0])>0 and (15-board.getSpaces()[space].getPosition()[1])>0:
                 leftUp1=board.getSpaces()[space-16].getOccupiedBy()
                 leftUp2=board.getSpaces()[space-32].getOccupiedBy()
                 leftUp3=board.getSpaces()[space-48].getOccupiedBy()
@@ -583,7 +629,7 @@ class Board(object):
 
 
             #look at spaces 2 leftUp 2 rightDown
-            if (board.getSpaces()[space].getPosition()[1]-2)>0:
+            if (board.getSpaces()[space].getPosition()[0]-2)>0 and (board.getSpaces()[space].getPosition()[1]-2)>0 (15-board.getSpaces()[space].getPosition[0])>1 and (15-board.getSpaces()[space].getPosition()[1])>1:
                 leftUp1=board.getSpaces()[space-16].getOccupiedBy()
                 leftUp2=board.getSpaces()[space-32].getOccupiedBy()
                 rightDown1=board.getSpaces()[space+16].getOccupiedBy()
@@ -606,7 +652,7 @@ class Board(object):
 
 
             #look at spaces 1 leftUp 3 rightDown
-            if (board.getSpaces()[space].getPosition()[1]-1)>0:
+            if (board.getSpaces()[space].getPosition()[0]-1)>0 and (board.getSpaces()[space].getPosition()[1]-1)>0 (15-board.getSpaces()[space].getPosition[0])>2 and (15-board.getSpaces()[space].getPosition()[1])>2:
                 leftUp1=board.getSpaces()[space-16].getOccupiedBy()
                 rightDown1=board.getSpaces()[space+16].getOccupiedBy()
                 rightDown2=board.getSpaces()[space+32].getOccupiedBy()
@@ -629,7 +675,9 @@ class Board(object):
                     diagonalCount = tempCount + 1
 
             #Increase specific count based on the best diagonalCount found
-            if(diagonalCount == 2):
+            if(diagonalCount == 1):
+                dcount1++
+            elif(diagonalCount == 2):
                 dcount2++
             elif(diagonalCount == 3):
                 dcount3++
@@ -639,13 +687,12 @@ class Board(object):
                 dcount5++
 
         #returns the number of vertical rows that have a chance of winning and have 2, 3, 4, or 5 columns
-        return (dcount2, dcount3, dcount4, dcount5)
+        return (dcount1, dcount2, dcount3, dcount4, dcount5)
 
     #check / diagonal
-    def checkDiag2(board):
-        #define whose turn it is
-        turn = board.whoseTurn()
+    def checkDiag2(board, turn):
 
+        dcount1 = 0
         dcount2 = 0
         dcount3 = 0
         dcount4 = 0
@@ -656,7 +703,7 @@ class Board(object):
         for space in range(0,225):
 
             #look at spaces 0 rightDown 4 rightUp
-            if (board.getSpaces()[space].getPosition()[1]-4)>0:         @#TODO fix boarder cases
+            if (board.getSpaces()[space].getPosition()[1]-4)>0 and (15-board.getSpaces()[space].getPosition()[0])>3:         @#TODO fix boarder cases
                 rightUp1=board.getSpaces()[space-14].getOccupiedBy()
                 rightUp2=board.getSpaces()[space-28].getOccupiedBy()
                 rightUp3=board.getSpaces()[space-42].getOccupiedBy()
@@ -679,7 +726,7 @@ class Board(object):
                     diagonalCount = tempCount + 1
 
             #look at spaces 0 rightUp 4 rightDown
-            if (15-board.getSpaces()[space].getPosition[1])>4:
+            if (board.getSpaces()[space].getPosition()[0]-4)>0 and (15-board.getSpaces()[space].getPosition[1])>3:
                 leftDown1=board.getSpaces()[space+14].getOccupiedBy()
                 leftDown2=board.getSpaces()[space+28].getOccupiedBy()
                 leftDown3=board.getSpaces()[space+42].getOccupiedBy()
@@ -702,7 +749,7 @@ class Board(object):
                     diagonalCount = tempCount + 1
 
             #look at spaces 3 rightUp 1 rightDown
-            if (board.getSpaces()[space].getPosition()[1]-3)>0:
+            if (board.getSpaces()[space].getPosition()[1]-3)>0 and (15-board.getSpaces()[space].getPosition[0])>2 and (board.getSpaces()[space].getPosition()[0]-1)>0 and (15-board.getSpaces()[space].getPosition[1])>0:
                 rightUp1=board.getSpaces()[space-14].getOccupiedBy()
                 rightUp2=board.getSpaces()[space-28].getOccupiedBy()
                 rightUp3=board.getSpaces()[space-42].getOccupiedBy()
@@ -726,7 +773,7 @@ class Board(object):
 
 
             #look at spaces 2 rightUp 2 rightDown
-            if (board.getSpaces()[space].getPosition()[1]-2)>0:
+            if (board.getSpaces()[space].getPosition()[1]-2)>0 and (15-board.getSpaces()[space].getPosition[0])>1 and (board.getSpaces()[space].getPosition()[0]-2)>0 and (15-board.getSpaces()[space].getPosition[1])>1:
                 rightUp1=board.getSpaces()[space-14].getOccupiedBy()
                 rightUp2=board.getSpaces()[space-28].getOccupiedBy()
                 leftDown1=board.getSpaces()[space+14].getOccupiedBy()
@@ -749,7 +796,7 @@ class Board(object):
 
 
             #look at spaces 1 rightUp 3 rightDown
-            if (board.getSpaces()[space].getPosition()[1]-1)>0:
+            if (board.getSpaces()[space].getPosition()[1]-1)>0 and (15-board.getSpaces()[space].getPosition[0])>0 and (board.getSpaces()[space].getPosition()[0]-3)>0 and (15-board.getSpaces()[space].getPosition[1])>2:
                 rightUp1=board.getSpaces()[space-14].getOccupiedBy()
                 leftDown1=board.getSpaces()[space+14].getOccupiedBy()
                 leftDown2=board.getSpaces()[space+28].getOccupiedBy()
@@ -772,7 +819,9 @@ class Board(object):
                     diagonalCount = tempCount + 1
 
             #Increase specific count based on the best diagonalCount found
-            if(diagonalCount == 2):
+            if(diagonalCount == 1):
+                dcount1++
+            elif(diagonalCount == 2):
                 dcount2++
             elif(diagonalCount == 3):
                 dcount3++
@@ -782,4 +831,4 @@ class Board(object):
                 dcount5++
 
         #returns the number of vertical rows that have a chance of winning and have 2, 3, 4, or 5 columns
-        return (dcount2, dcount3, dcount4, dcount5)
+        return (dcount1, dcount2, dcount3, dcount4, dcount5)
