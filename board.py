@@ -1,8 +1,8 @@
-class Board(object):
+from space import Space
+class Board():
     """docstring for board."""
     def __init__(self):
-        super(board, self).__init__()
-
+        self.spaces = []
 
         for y in range(1,16):
             for x in range(1,16):
@@ -17,31 +17,47 @@ class Board(object):
         return self.isComplete
     def whoseTurn(self):
         return self.turn
-    def checkComplete(self):
-        #If white stones has 5 in a row set isComplete to false
-        if condition:
+    # def checkComplete(self):
+    #     #If white stones has 5 in a row set isComplete to false
+    #     if condition:
+    #
+    #     #Else if black stones has 5 in a row set isComplete to false
+    #     elif:
+    #
+    #     #Else if the board is filled, the game is tied
+    #     else:
+    #         self.isComplete = False
+    #     return self.isComplete
 
-        #Else if black stones has 5 in a row set isComplete to false
-        elif:
+    def placeStone(self, player, xPos, yPos):
+        index = int(xPos)*int(yPos)
 
-        #Else if the board is filled, the game is tied
-        else:
-            self.isComplete = False
-        return self.isComplete
-
-    def placeStone(player, xPos, yPos):
-        index = xPos*yPos
-
-        if not self.spaces[index].filled:
+        if not self.spaces[index].isFilled:
             self.spaces[index].fill(player)
         else:
             print ("Invalid move space is occupied by: ", self.spaces[index].occupiedBy)
 
 
+
+    def getChildren(self):
+        #list of empty spaces
+        children = []
+        #finds all empty spaces and puts into children
+        # for i in range(1,16):
+        #     for j in range(1,16):
+        #
+        for tile in self.getSpaces():
+                # if(self.getSpaces()[i*j].getIsFilled() == False):
+#                     print i*j
+            if not tile.getIsFilled():
+                children.append(tile)
+        # print children
+        return children
+
     def minimax(self):
 
         #get all potential next moves
-        potentialPositions = getChildren(self)
+        potentialPositions = self.getChildren()
 
         #variables to return the best move
         currentBest = potentialPositions[0]
@@ -50,18 +66,18 @@ class Board(object):
         #Go through all potential posistions with minimax
         for child in  potentialPositions:
 
-            #create a copy of the boardstate with the position now filled
-            copyBoard = self
+            #create a copy of the selfstate with the position now filled
+            copyself = self
             childPos = child.getPosition()
 
-            for i in range(1,16):
-                for j in range(1,16):
-                    if copyBoard.getSpaces()[i][j].getPosition() == childPos
-                        copyBoard.getSpaces()[i][j].fill(copyturn)
-                        break
 
-            #Get the max value of board state of the copied state
-            tempMax = minMove(copyBoard, 0)
+            for copySpace in copyself.getSpaces():
+                if copySpace.getPosition() == childPos:
+                    copySpace.fill(copyself.whoseTurn())
+                    break
+
+            #Get the max value of self state of the copied state
+            tempMax = copyself.minMove(0)
 
             #if the found value is creater than current best value, it becomes new best value
             if(tempMax > currentBestValue):
@@ -73,34 +89,21 @@ class Board(object):
 
 
 
-    def getChildren(board):
-        #list of empty spaces
-        children = []
 
-        #finds all empty spaces and puts into children
-        for i in range(1,16):
-            for j in range(1,16):
-                if(board.getSpaces()[i][j].getIsFilled() == false):
-                    children.append(board.getSpaces()[i][j])
-
-        return children
-
-
-
-    def minMove(board, branch):
-
+    def minMove(self, branch):
+        print "here1"
         #check if game is done whether its a tie or someone wins
-        board.checkComplete()
+        # self.checkComplete()
         #if game is complete, return the value of the gamestate
         #if opponent wins, the value will be small,
         #if player wins, value will be larger
-        if board.getIsComplete() == true:
-            return  eval(board)
-        elif branch == 2:
-            return eval(board)
+        # if self.getIsComplete() == true:
+        #     return  evaluation(self)
+        if branch == 2:
+            return self.evaluation()
 
-        #get all potential next moves of board
-        potentialPositions = getChildren(board)
+        #get all potential next moves of self
+        potentialPositions = self.getChildren()
 
 
         #variables to return the best move
@@ -110,18 +113,17 @@ class Board(object):
         #Go through all potential posistions with minimax
         for child in  potentialPositions:
 
-            #create a copy of the boardstate with the position now filled
-            copyBoard = board
+            #create a copy of the selfstate with the position now filled
+            copyself = self
             childPos = child.getPosition()
 
-            for i in range(1,16):
-                for j in range(1,16):
-                    if copyBoard.getSpaces()[i][j].getPosition() == childPos
-                        copyBoard.getSpaces()[i][j].fill(copyturn)
-                        break
+            for copySpace in copyself.getSpaces():
+                if copySpace.getPosition() == childPos:
+                    copySpace.fill(not copyself.whoseTurn())
+                    break
 
-            #Get the min value of board state of the copied state
-            tempMin = MaxMove(copyBoard, branch+1)
+            #Get the min value of self state of the copied state
+            tempMin = copyself.maxMove(branch+1)
 
             #if the found value is creater than current best value, it becomes new best value
             if(tempMin < currentWorstValue):
@@ -133,41 +135,40 @@ class Board(object):
 
 
 
-    def maxMove(board, branch):
+    def maxMove(self, branch):
 
         #check if game is done whether its a tie or someone wins
-        board.checkComplete()
+        # self.checkComplete()
         #if game is complete, return the value of the gamestate
         #if opponent wins, the value will be small,
         #if player wins, value will be larger
-        if board.getIsComplete() == true:
-            return  eval(board)
-        elif branch == 2:
-            return eval(board)
-
-        #get all potential next moves of board
-        potentialPositions = getChildren(board)
+        # if self.getIsComplete() == true:
+        #     return  evaluation(self)
+        if branch == 2:
+            return self.evaluation()
+        print "here2"
+        #get all potential next moves of self
+        potentialPositions = self.getChildren()
 
 
         #variables to return the best move
+
         currentBest = potentialPositions[0]
         currentBestValue = float('-inf')
 
         #Go through all potential posistions with minimax
         for child in  potentialPositions:
 
-            #create a copy of the boardstate with the position now filled
-            copyBoard = board
+            #create a copy of the selfstate with the position now filled
+            copyself = self
             childPos = child.getPosition()
+            for copySpace in copyself.getSpaces():
+                if copySpace.getPosition() == childPos:
+                    copySpace.fill(copyself.whoseTurn())
+                    break
 
-            for i in range(1,16):
-                for j in range(1,16):
-                    if copyBoard.getSpaces()[i][j].getPosition() == childPos
-                        copyBoard.getSpaces()[i][j].fill(copyBoard.whoseTurn())
-                        break
-
-            #Get the min value of board state of the copied state
-            tempMax = MinMove(copyBoard, branch+1)
+            #Get the min value of self state of the copied state
+            tempMax = copyself.minMove(branch+1)
 
             #if the found value is creater than current best value, it becomes new best value
             if(tempMax > currentBestValue):
@@ -178,8 +179,7 @@ class Board(object):
         return currentBestValue
 
 
-    def eval(board):
-        @# TODO: create an eval function
+    def evaluation(self):
 
         value = None
 
@@ -197,72 +197,72 @@ class Board(object):
         num2White = 0
         num1White = 0
 
-        b1, b2, b3, b4, b5 = checkHoriz(board, 0)
+        b1, b2, b3, b4, b5 = self.checkHoriz(0)
         num1Black += b1
         num2Black += b2
         num3Black += b3
         num4Black += b4
         num5Black += b5
-        b1, b2, b3, b4, b5 = checkVert(board, 0)
+        b1, b2, b3, b4, b5 = self.checkVert(0)
         num1Black += b1
         num2Black += b2
         num3Black += b3
         num4Black += b4
         num5Black += b5
-        b1, b2, b3, b4, b5 = checkDiag1(board, 0)
+        b1, b2, b3, b4, b5 = self.checkDiag1(0)
         num1Black += b1
         num2Black += b2
         num3Black += b3
         num4Black += b4
         num5Black += b5
-        b1,  b2, b3, b4, b5 = checkDiag2(board, 0)
+        b1,  b2, b3, b4, b5 = self.checkDiag2(0)
         num1Black += b1
         num2Black += b2
         num3Black += b3
         num4Black += b4
         num5Black += b5
 
-        w1, w2, w3, w4, w5 = checkHoriz(board, 1)
+        w1, w2, w3, w4, w5 = self.checkHoriz(1)
         num1White += w1
         num2White += w2
         num3White += w3
         num4White += w4
         num5White += w5
-        w1, w2, w3, w4, w5 = checkVert(board, 1)
+        w1, w2, w3, w4, w5 = self.checkVert(1)
         num1White += w1
         num2White += w2
         num3White += w3
         num4White += w4
         num5White += w5
-        w1, w2, w3, w4, w5 = checkDiag1(board, 1)
+        w1, w2, w3, w4, w5 = self.checkDiag1(1)
         num1White += w1
         num2White += w2
         num3White += w3
         num4White += w4
         num5White += w5
-        w1, w2, w3, w4, w5 = checkDiag2(board, 1)
+        w1, w2, w3, w4, w5 = self.checkDiag2(1)
         num1White += w1
         num2White += w2
         num3White += w3
         num4White += w4
         num5White += w5
 
-        if num5Black > 0 and board.whoseTurn() == 0:
+        if num5Black > 0 and self.whoseTurn() == 0:
             return float('inf')
-        elif num5Black > 0 and board.whoseTurn() == 1:
+        elif num5Black > 0 and self.whoseTurn() == 1:
             return float('-inf')
-        elif num5White > 0 and board.whoseTurn() == 0:
+        elif num5White > 0 and self.whoseTurn() == 0:
             return float('-inf')
-        elif num5White > 0 and board.whoseTurn() == 1:
+        elif num5White > 0 and self.whoseTurn() == 1:
             return float('inf')
         else:
-            value = (1000 * num4Black + 100 * num3Black + 10 * num2Black + num1Black) - (1000 * num4White + 100 * num3White + 10 * num2White + num1White) #eval function
+            value = (1000 * num4Black + 100 * num3Black + 10 * num2Black + num1Black) - (1000 * num4White + 100 * num3White + 10 * num2White + num1White) #evaluation function
 
 
         return value
 
     #check horizontal
-    def checkHoriz(board, turn):
+    def checkHoriz(self, turn):
 
         hcount1 = 0
         hcount2 = 0
@@ -275,11 +275,11 @@ class Board(object):
         for space in range(0,225):
 
             #look at spaces 0 right 4 left
-            if (board.getSpaces()[space].getPosition()[0]-4)>0:
-                left1=board.getSpaces()[space-1].getOccupiedBy()
-                left2=board.getSpaces()[space-2].getOccupiedBy()
-                left3=board.getSpaces()[space-3].getOccupiedBy()
-                left4=board.getSpaces()[space-4].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[0]-4)>0:
+                left1=self.getSpaces()[space-1].getOccupiedBy()
+                left2=self.getSpaces()[space-2].getOccupiedBy()
+                left3=self.getSpaces()[space-3].getOccupiedBy()
+                left4=self.getSpaces()[space-4].getOccupiedBy()
 
                 tempCount =0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -298,15 +298,15 @@ class Board(object):
                     horizontalCount = tempCount + 1
 
             #look at spaces 0 left 4 right
-            if (15-board.getSpaces()[space].getPosition[0])>3:
-                right1=board.getSpaces()[space+1].getOccupiedBy()
-                right2=board.getSpaces()[space+2].getOccupiedBy()
-                right3=board.getSpaces()[space+3].getOccupiedBy()
-                right4=board.getSpaces()[space+4].getOccupiedBy()
+            if (15-self.getSpaces()[space].getPosition()[0])>3:
+                right1=self.getSpaces()[space+1].getOccupiedBy()
+                right2=self.getSpaces()[space+2].getOccupiedBy()
+                right3=self.getSpaces()[space+3].getOccupiedBy()
+                right4=self.getSpaces()[space+4].getOccupiedBy()
                 tempCount=0
 
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
-                if ((right1 == turn or right1==2) and (right2 == turn or left2==2) and (left3 == turn or left3==2) and (left4 == turn or left4==2)):
+                if ((right1 == turn or right1==2) and (right2 == turn or right2==2) and (right3 == turn or right3==2) and (right4 == turn or right4==2)):
                     #increase tempCount for the number of actual spaces filled with player's stone
                     if right1 ==turn:
                         tempCount+=1
@@ -321,11 +321,11 @@ class Board(object):
                     horizontalCount = tempCount + 1
 
             #look at spaces 3 left 1 right
-            if (board.getSpaces()[space].getPosition()[0]-3)>0 and (15-board.getSpaces()[space].getPosition()[0])>0:
-                left1=board.getSpaces()[space-1].getOccupiedBy()
-                left2=board.getSpaces()[space-2].getOccupiedBy()
-                left3=board.getSpaces()[space-3].getOccupiedBy()
-                right1=board.getSpaces()[space+1].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[0]-3)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
+                left1=self.getSpaces()[space-1].getOccupiedBy()
+                left2=self.getSpaces()[space-2].getOccupiedBy()
+                left3=self.getSpaces()[space-3].getOccupiedBy()
+                right1=self.getSpaces()[space+1].getOccupiedBy()
 
                 tempCount =0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -345,11 +345,11 @@ class Board(object):
 
 
             #look at spaces 2 left 2 right
-            if (board.getSpaces()[space].getPosition()[0]-2)>0 and (15-board.getSpaces()[space].getPosition()[0])>1:
-                left1=board.getSpaces()[space-1].getOccupiedBy()
-                left2=board.getSpaces()[space-2].getOccupiedBy()
-                right1=board.getSpaces()[space+1].getOccupiedBy()
-                right2=board.getSpaces()[space+2].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[0]-2)>0 and (15-self.getSpaces()[space].getPosition()[0])>1:
+                left1=self.getSpaces()[space-1].getOccupiedBy()
+                left2=self.getSpaces()[space-2].getOccupiedBy()
+                right1=self.getSpaces()[space+1].getOccupiedBy()
+                right2=self.getSpaces()[space+2].getOccupiedBy()
                 tempCount = 0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
                 if ((left1 == turn or left1==2) and (left2 == turn or left2==2) and (right1 == turn or right1==2) and (right2 == turn or right2==2)):
@@ -368,11 +368,11 @@ class Board(object):
 
 
             #look at spaces 1 left 3 right
-            if (board.getSpaces()[space].getPosition()[0]-1)>0 and (15-board.getSpaces()[space].getPosition()[0])>2:
-                left1=board.getSpaces()[space-1].getOccupiedBy()
-                right1=board.getSpaces()[space+1].getOccupiedBy()
-                right2=board.getSpaces()[space+2].getOccupiedBy()
-                right3=board.getSpaces()[space+3].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>2:
+                left1=self.getSpaces()[space-1].getOccupiedBy()
+                right1=self.getSpaces()[space+1].getOccupiedBy()
+                right2=self.getSpaces()[space+2].getOccupiedBy()
+                right3=self.getSpaces()[space+3].getOccupiedBy()
                 tempCount = 0
 
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -392,21 +392,21 @@ class Board(object):
 
             #Increase specific count based on the best horizontalCount found
             if(horizontalCount == 1):
-                hcount1++
+                hcount1+=1
             elif(horizontalCount == 2):
-                hcount2++
+                hcount2+=1
             elif(horizontalCount == 3):
-                hcount3++
+                hcount3+=1
             elif(horizontalCount == 4):
-                hcount4++
+                hcount4+=1
             elif(horizontalCount == 5):
-                hcount5++
+                hcount5+=1
 
         #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (hcount1, hcount2, hcount3, hcount4, hcount5)
 
     #check vertical
-    def checkVert(board, turn):
+    def checkVert(self, turn):
 
         vcount1 = 0
         vcount2 = 0
@@ -419,11 +419,11 @@ class Board(object):
         for space in range(0,225):
 
             #look at spaces 0 down 4 up
-            if (board.getSpaces()[space].getPosition()[1]-4)>0:
-                up1=board.getSpaces()[space-15].getOccupiedBy()
-                up2=board.getSpaces()[space-30].getOccupiedBy()
-                up3=board.getSpaces()[space-45].getOccupiedBy()
-                up4=board.getSpaces()[space-60].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[1]-4)>0:
+                up1=self.getSpaces()[space-15].getOccupiedBy()
+                up2=self.getSpaces()[space-30].getOccupiedBy()
+                up3=self.getSpaces()[space-45].getOccupiedBy()
+                up4=self.getSpaces()[space-60].getOccupiedBy()
 
                 tempCount =0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -442,11 +442,11 @@ class Board(object):
                     verticalCount = tempCount + 1
 
             #look at spaces 0 up 4 down
-            if (15-board.getSpaces()[space].getPosition[1])>3:
-                down1=board.getSpaces()[space+15].getOccupiedBy()
-                down2=board.getSpaces()[space+30].getOccupiedBy()
-                down3=board.getSpaces()[space+45].getOccupiedBy()
-                down4=board.getSpaces()[space+60].getOccupiedBy()
+            if (15-self.getSpaces()[space].getPosition()[1])>3:
+                down1=self.getSpaces()[space+15].getOccupiedBy()
+                down2=self.getSpaces()[space+30].getOccupiedBy()
+                down3=self.getSpaces()[space+45].getOccupiedBy()
+                down4=self.getSpaces()[space+60].getOccupiedBy()
                 tempCount=0
 
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -465,11 +465,11 @@ class Board(object):
                     verticalCount = tempCount + 1
 
             #look at spaces 3 up 1 down
-            if (board.getSpaces()[space].getPosition()[1]-3)>0 and (15-board.getSpaces()[space].getPosition[1])>0:
-                up1=board.getSpaces()[space-15].getOccupiedBy()
-                up2=board.getSpaces()[space-30].getOccupiedBy()
-                up3=board.getSpaces()[space-45].getOccupiedBy()
-                down1=board.getSpaces()[space+15].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[1]-3)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
+                up1=self.getSpaces()[space-15].getOccupiedBy()
+                up2=self.getSpaces()[space-30].getOccupiedBy()
+                up3=self.getSpaces()[space-45].getOccupiedBy()
+                down1=self.getSpaces()[space+15].getOccupiedBy()
 
                 tempCount =0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -489,11 +489,11 @@ class Board(object):
 
 
             #look at spaces 2 up 2 down
-            if (board.getSpaces()[space].getPosition()[1]-2)>0 and (15-board.getSpaces()[space].getPosition[1])>1:
-                up1=board.getSpaces()[space-15].getOccupiedBy()
-                up2=board.getSpaces()[space-30].getOccupiedBy()
-                down1=board.getSpaces()[space+15].getOccupiedBy()
-                down2=board.getSpaces()[space+30].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[1]-2)>0 and (15-self.getSpaces()[space].getPosition()[1])>1:
+                up1=self.getSpaces()[space-15].getOccupiedBy()
+                up2=self.getSpaces()[space-30].getOccupiedBy()
+                down1=self.getSpaces()[space+15].getOccupiedBy()
+                down2=self.getSpaces()[space+30].getOccupiedBy()
                 tempCount = 0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
                 if ((up1 == turn or up1==2) and (up2 == turn or up2==2) and (down1 == turn or down1==2) and (down2 == turn or down2==2)):
@@ -512,11 +512,11 @@ class Board(object):
 
 
             #look at spaces 1 up 3 down
-            if (board.getSpaces()[space].getPosition()[1]-1)>0 and (15-board.getSpaces()[space].getPosition[1])>2:
-                up1=board.getSpaces()[space-15].getOccupiedBy()
-                down1=board.getSpaces()[space+15].getOccupiedBy()
-                down2=board.getSpaces()[space+30].getOccupiedBy()
-                down3=board.getSpaces()[space+45].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>2:
+                up1=self.getSpaces()[space-15].getOccupiedBy()
+                down1=self.getSpaces()[space+15].getOccupiedBy()
+                down2=self.getSpaces()[space+30].getOccupiedBy()
+                down3=self.getSpaces()[space+45].getOccupiedBy()
                 tempCount = 0
 
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -536,21 +536,21 @@ class Board(object):
 
             #Increase specific count based on the best verticalCount found
             if(verticalCount == 1):
-                vcount1++
+                vcount1+=1
             elif(verticalCount == 2):
-                vcount2++
+                vcount2+=1
             elif(verticalCount == 3):
-                vcount3++
+                vcount3+=1
             elif(verticalCount == 4):
-                vcount4++
+                vcount4+=1
             elif(verticalCount == 5):
-                vcount5++
+                vcount5+=1
 
         #returns the number of vertical rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (vcount1, vcount2, vcount3, vcount4, vcount5)
 
     #check \ vertical
-    def checkDiag1(board, turn):
+    def checkDiag1(self, turn):
 
         dcount1 = 0
         dcount2 = 0
@@ -563,11 +563,11 @@ class Board(object):
         for space in range(0,225):
 
             #look at spaces 0 rightDown 4 leftUp
-            if (board.getSpaces()[space].getPosition()[0]-4)>0 and (board.getSpaces()[space].getPosition()[1]-4)>0:         @#TODO fix boarder cases
-                leftUp1=board.getSpaces()[space-16].getOccupiedBy()
-                leftUp2=board.getSpaces()[space-32].getOccupiedBy()
-                leftUp3=board.getSpaces()[space-48].getOccupiedBy()
-                leftUp4=board.getSpaces()[space-64].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[0]-4)>0 and (self.getSpaces()[space].getPosition()[1]-4)>0:
+                leftUp1=self.getSpaces()[space-16].getOccupiedBy()
+                leftUp2=self.getSpaces()[space-32].getOccupiedBy()
+                leftUp3=self.getSpaces()[space-48].getOccupiedBy()
+                leftUp4=self.getSpaces()[space-64].getOccupiedBy()
 
                 tempCount =0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -586,11 +586,11 @@ class Board(object):
                     diagonalCount = tempCount + 1
 
             #look at spaces 0 leftUp 4 rightDown
-            if (15-board.getSpaces()[space].getPosition[0])>4 and (15-board.getSpaces()[space].getPosition()[1])>4:
-                rightDown1=board.getSpaces()[space+16].getOccupiedBy()
-                rightDown2=board.getSpaces()[space+32].getOccupiedBy()
-                rightDown3=board.getSpaces()[space+48].getOccupiedBy()
-                rightDown4=board.getSpaces()[space+64].getOccupiedBy()
+            if (15-self.getSpaces()[space].getPosition()[0])>4 and (15-self.getSpaces()[space].getPosition()[1])>4:
+                rightDown1=self.getSpaces()[space+16].getOccupiedBy()
+                rightDown2=self.getSpaces()[space+32].getOccupiedBy()
+                rightDown3=self.getSpaces()[space+48].getOccupiedBy()
+                rightDown4=self.getSpaces()[space+64].getOccupiedBy()
                 tempCount=0
 
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -609,11 +609,11 @@ class Board(object):
                     diagonalCount = tempCount + 1
 
             #look at spaces 3 leftUp 1 rightDown
-            if (board.getSpaces()[space].getPosition()[0]-3)>0 and (board.getSpaces()[space].getPosition()[1]-3)>0 (15-board.getSpaces()[space].getPosition[0])>0 and (15-board.getSpaces()[space].getPosition()[1])>0:
-                leftUp1=board.getSpaces()[space-16].getOccupiedBy()
-                leftUp2=board.getSpaces()[space-32].getOccupiedBy()
-                leftUp3=board.getSpaces()[space-48].getOccupiedBy()
-                rightDown1=board.getSpaces()[space+16].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[0]-3)>0 and (self.getSpaces()[space].getPosition()[1]-3)>0 and (15-self.getSpaces()[space].getPosition()[0])>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
+                leftUp1=self.getSpaces()[space-16].getOccupiedBy()
+                leftUp2=self.getSpaces()[space-32].getOccupiedBy()
+                leftUp3=self.getSpaces()[space-48].getOccupiedBy()
+                rightDown1=self.getSpaces()[space+16].getOccupiedBy()
 
                 tempCount =0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -633,11 +633,11 @@ class Board(object):
 
 
             #look at spaces 2 leftUp 2 rightDown
-            if (board.getSpaces()[space].getPosition()[0]-2)>0 and (board.getSpaces()[space].getPosition()[1]-2)>0 (15-board.getSpaces()[space].getPosition[0])>1 and (15-board.getSpaces()[space].getPosition()[1])>1:
-                leftUp1=board.getSpaces()[space-16].getOccupiedBy()
-                leftUp2=board.getSpaces()[space-32].getOccupiedBy()
-                rightDown1=board.getSpaces()[space+16].getOccupiedBy()
-                rightDown2=board.getSpaces()[space+32].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[0]-2)>0 and (self.getSpaces()[space].getPosition()[1]-2)>0 and (15-self.getSpaces()[space].getPosition()[0])>1 and (15-self.getSpaces()[space].getPosition()[1])>1:
+                leftUp1=self.getSpaces()[space-16].getOccupiedBy()
+                leftUp2=self.getSpaces()[space-32].getOccupiedBy()
+                rightDown1=self.getSpaces()[space+16].getOccupiedBy()
+                rightDown2=self.getSpaces()[space+32].getOccupiedBy()
                 tempCount = 0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
                 if ((leftUp1 == turn or leftUp1==2) and (leftUp2 == turn or leftUp2==2) and (rightDown1 == turn or rightDown1==2) and (rightDown2 == turn or rightDown2==2)):
@@ -656,11 +656,11 @@ class Board(object):
 
 
             #look at spaces 1 leftUp 3 rightDown
-            if (board.getSpaces()[space].getPosition()[0]-1)>0 and (board.getSpaces()[space].getPosition()[1]-1)>0 (15-board.getSpaces()[space].getPosition[0])>2 and (15-board.getSpaces()[space].getPosition()[1])>2:
-                leftUp1=board.getSpaces()[space-16].getOccupiedBy()
-                rightDown1=board.getSpaces()[space+16].getOccupiedBy()
-                rightDown2=board.getSpaces()[space+32].getOccupiedBy()
-                rightDown3=board.getSpaces()[space+48].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[0]-1)>0 and (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>2 and (15-self.getSpaces()[space].getPosition()[1])>2:
+                leftUp1=self.getSpaces()[space-16].getOccupiedBy()
+                rightDown1=self.getSpaces()[space+16].getOccupiedBy()
+                rightDown2=self.getSpaces()[space+32].getOccupiedBy()
+                rightDown3=self.getSpaces()[space+48].getOccupiedBy()
                 tempCount = 0
 
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -680,21 +680,21 @@ class Board(object):
 
             #Increase specific count based on the best diagonalCount found
             if(diagonalCount == 1):
-                dcount1++
+                dcount1+=1
             elif(diagonalCount == 2):
-                dcount2++
+                dcount2+=1
             elif(diagonalCount == 3):
-                dcount3++
+                dcount3+=1
             elif(diagonalCount == 4):
-                dcount4++
+                dcount4+=1
             elif(diagonalCount == 5):
-                dcount5++
+                dcount5+=1
 
         #returns the number of vertical rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (dcount1, dcount2, dcount3, dcount4, dcount5)
 
     #check / diagonal
-    def checkDiag2(board, turn):
+    def checkDiag2(self, turn):
 
         dcount1 = 0
         dcount2 = 0
@@ -707,11 +707,11 @@ class Board(object):
         for space in range(0,225):
 
             #look at spaces 0 rightDown 4 rightUp
-            if (board.getSpaces()[space].getPosition()[1]-4)>0 and (15-board.getSpaces()[space].getPosition()[0])>3:         @#TODO fix boarder cases
-                rightUp1=board.getSpaces()[space-14].getOccupiedBy()
-                rightUp2=board.getSpaces()[space-28].getOccupiedBy()
-                rightUp3=board.getSpaces()[space-42].getOccupiedBy()
-                rightUp4=board.getSpaces()[space-56].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[1]-4)>0 and (15-self.getSpaces()[space].getPosition()[0])>3:
+                rightUp1=self.getSpaces()[space-14].getOccupiedBy()
+                rightUp2=self.getSpaces()[space-28].getOccupiedBy()
+                rightUp3=self.getSpaces()[space-42].getOccupiedBy()
+                rightUp4=self.getSpaces()[space-56].getOccupiedBy()
 
                 tempCount =0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -730,11 +730,11 @@ class Board(object):
                     diagonalCount = tempCount + 1
 
             #look at spaces 0 rightUp 4 rightDown
-            if (board.getSpaces()[space].getPosition()[0]-4)>0 and (15-board.getSpaces()[space].getPosition[1])>3:
-                leftDown1=board.getSpaces()[space+14].getOccupiedBy()
-                leftDown2=board.getSpaces()[space+28].getOccupiedBy()
-                leftDown3=board.getSpaces()[space+42].getOccupiedBy()
-                leftDown4=board.getSpaces()[space+56].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[0]-4)>0 and (15-self.getSpaces()[space].getPosition()[1])>3:
+                leftDown1=self.getSpaces()[space+14].getOccupiedBy()
+                leftDown2=self.getSpaces()[space+28].getOccupiedBy()
+                leftDown3=self.getSpaces()[space+42].getOccupiedBy()
+                leftDown4=self.getSpaces()[space+56].getOccupiedBy()
                 tempCount=0
 
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -753,11 +753,11 @@ class Board(object):
                     diagonalCount = tempCount + 1
 
             #look at spaces 3 rightUp 1 rightDown
-            if (board.getSpaces()[space].getPosition()[1]-3)>0 and (15-board.getSpaces()[space].getPosition[0])>2 and (board.getSpaces()[space].getPosition()[0]-1)>0 and (15-board.getSpaces()[space].getPosition[1])>0:
-                rightUp1=board.getSpaces()[space-14].getOccupiedBy()
-                rightUp2=board.getSpaces()[space-28].getOccupiedBy()
-                rightUp3=board.getSpaces()[space-42].getOccupiedBy()
-                leftDown1=board.getSpaces()[space+14].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[1]-3)>0 and (15-self.getSpaces()[space].getPosition()[0])>2 and (self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
+                rightUp1=self.getSpaces()[space-14].getOccupiedBy()
+                rightUp2=self.getSpaces()[space-28].getOccupiedBy()
+                rightUp3=self.getSpaces()[space-42].getOccupiedBy()
+                leftDown1=self.getSpaces()[space+14].getOccupiedBy()
 
                 tempCount =0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -777,11 +777,11 @@ class Board(object):
 
 
             #look at spaces 2 rightUp 2 rightDown
-            if (board.getSpaces()[space].getPosition()[1]-2)>0 and (15-board.getSpaces()[space].getPosition[0])>1 and (board.getSpaces()[space].getPosition()[0]-2)>0 and (15-board.getSpaces()[space].getPosition[1])>1:
-                rightUp1=board.getSpaces()[space-14].getOccupiedBy()
-                rightUp2=board.getSpaces()[space-28].getOccupiedBy()
-                leftDown1=board.getSpaces()[space+14].getOccupiedBy()
-                leftDown2=board.getSpaces()[space+28].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[1]-2)>0 and (15-self.getSpaces()[space].getPosition()[0])>1 and (self.getSpaces()[space].getPosition()[0]-2)>0 and (15-self.getSpaces()[space].getPosition()[1])>1:
+                rightUp1=self.getSpaces()[space-14].getOccupiedBy()
+                rightUp2=self.getSpaces()[space-28].getOccupiedBy()
+                leftDown1=self.getSpaces()[space+14].getOccupiedBy()
+                leftDown2=self.getSpaces()[space+28].getOccupiedBy()
                 tempCount = 0
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
                 if ((rightUp1 == turn or rightUp1==2) and (rightUp2 == turn or rightUp2==2) and (leftDown1 == turn or leftDown1==2) and (leftDown2 == turn or leftDown2==2)):
@@ -800,11 +800,11 @@ class Board(object):
 
 
             #look at spaces 1 rightUp 3 rightDown
-            if (board.getSpaces()[space].getPosition()[1]-1)>0 and (15-board.getSpaces()[space].getPosition[0])>0 and (board.getSpaces()[space].getPosition()[0]-3)>0 and (15-board.getSpaces()[space].getPosition[1])>2:
-                rightUp1=board.getSpaces()[space-14].getOccupiedBy()
-                leftDown1=board.getSpaces()[space+14].getOccupiedBy()
-                leftDown2=board.getSpaces()[space+28].getOccupiedBy()
-                leftDown3=board.getSpaces()[space+42].getOccupiedBy()
+            if (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0 and (self.getSpaces()[space].getPosition()[0]-3)>0 and (15-self.getSpaces()[space].getPosition()[1])>2:
+                rightUp1=self.getSpaces()[space-14].getOccupiedBy()
+                leftDown1=self.getSpaces()[space+14].getOccupiedBy()
+                leftDown2=self.getSpaces()[space+28].getOccupiedBy()
+                leftDown3=self.getSpaces()[space+42].getOccupiedBy()
                 tempCount = 0
 
                 #check to make sure all these spaces are either blank or the color of the player whose turn it is
@@ -824,15 +824,15 @@ class Board(object):
 
             #Increase specific count based on the best diagonalCount found
             if(diagonalCount == 1):
-                dcount1++
+                dcount1+=1
             elif(diagonalCount == 2):
-                dcount2++
+                dcount2+=1
             elif(diagonalCount == 3):
-                dcount3++
+                dcount3+=1
             elif(diagonalCount == 4):
-                dcount4++
+                dcount4+=1
             elif(diagonalCount == 5):
-                dcount5++
+                dcount5+=1
 
         #returns the number of vertical rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (dcount1, dcount2, dcount3, dcount4, dcount5)

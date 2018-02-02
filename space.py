@@ -1,12 +1,11 @@
-class Space(object):
+class Space():
     """docstring for space."""
     def __init__(self, xPos,yPos):
-        super(space, self).__init__()
         self.isFilled = False
         self.position = [xPos,yPos]
         self.occupiedBy = 2
 
-    def fill(player):
+    def fill(self, player):
         self.isFilled = True
         self.occupiedBy = player
 

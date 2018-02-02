@@ -1,10 +1,12 @@
 import os.path
+from board import Board
+from space import Space
 if __name__ == '__main__':
     board = Board()
 
     #White is 1, Black is 2
     color = 1
-    # opponent = 0
+    opponent = 0
     #Have some randomizer to determine order of players
     moves=0
     #While the end of game file isn't there
@@ -15,18 +17,18 @@ if __name__ == '__main__':
         #ensure we are not writing and checking to fast
         # time.sleep(.1)
         # if os.path.isfile('AIWithFriends.go'): #main python file to run our code from
-        if moves %2 ==1:
+        if moves %2 ==0:
             column=raw_input("Column: ")
             row=raw_input("Row: ")
-            moves++
-            file = open("move_file.txt", "w")
-            file.write('Human'+ str(column) + str(row))
-            file.close()
 
-        if moves %2 ==0:
+            file = open("move_file.txt", "w")
+            file.write('Human '+ str(column)+' ' + str(row))
+            file.close()
+            moves+=1
+        if moves %2 ==1:
             #read the move.txt file and update the board
             file = open("move_file.txt", "r")
-            move = str(file.read())
+            move = str(file.read()).split()
             file.close()
             #if the file is empty, this is the first move of the game so we are the white stones
             # if move == []:
@@ -36,6 +38,9 @@ if __name__ == '__main__':
             #Otherwise, a move has been made. Process the latest move and update our board
             # else:
             #move is split by spaces into 3 things, groupName Column Row
+            print opponent
+            print move[1]
+            print move[2]
             board.placeStone(opponent, move[1], move[2])
 
             #Process the board and do magic things to do best move
@@ -46,4 +51,4 @@ if __name__ == '__main__':
             file = open("move_file.txt", "w")
             file.write('AIWithFriends'+str(optimalMove[0])+str(optimalMove[1]))
             file.close()
-            moves++
+            moves+=1
