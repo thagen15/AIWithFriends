@@ -35,13 +35,13 @@ class Board(object):
         if not self.spaces[index].filled:
             self.spaces[index].fill(player)
         else:
-            print ("Invalid move pace is occupied by: ", self.spaces[index].occupiedBy)
+            print ("Invalid move space is occupied by: ", self.spaces[index].occupiedBy)
 
 
-    def minimax():
+    def minimax(self):
 
         #get all potential next moves
-        potentialPositions = getChildren(board)
+        potentialPositions = getChildren(self)
 
         #variables to return the best move
         currentBest = potentialPositions[0]
@@ -51,7 +51,7 @@ class Board(object):
         for child in  potentialPositions:
 
             #create a copy of the boardstate with the position now filled
-            copyBoard = board
+            copyBoard = self
             childPos = child.getPosition()
 
             for i in range(1,16):
