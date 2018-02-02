@@ -61,7 +61,7 @@ class Board(object):
                         break
 
             #Get the max value of board state of the copied state
-            tempMax = minMove(copyBoard)
+            tempMax = minMove(copyBoard, 0)
 
             #if the found value is creater than current best value, it becomes new best value
             if(tempMax > currentBestValue):
@@ -87,7 +87,7 @@ class Board(object):
 
 
 
-    def minMove(board):
+    def minMove(board, branch):
 
         #check if game is done whether its a tie or someone wins
         board.checkComplete()
@@ -96,6 +96,8 @@ class Board(object):
         #if player wins, value will be larger
         if board.getIsComplete() == true:
             return  eval(board)
+        elif branch == 2:
+            return eval(board)
 
         #get all potential next moves of board
         potentialPositions = getChildren(board)
@@ -119,7 +121,7 @@ class Board(object):
                         break
 
             #Get the min value of board state of the copied state
-            tempMin = MaxMove(copyBoard)
+            tempMin = MaxMove(copyBoard, branch+1)
 
             #if the found value is creater than current best value, it becomes new best value
             if(tempMin < currentWorstValue):
@@ -131,7 +133,7 @@ class Board(object):
 
 
 
-    def maxMove(board):
+    def maxMove(board, branch):
 
         #check if game is done whether its a tie or someone wins
         board.checkComplete()
@@ -140,6 +142,8 @@ class Board(object):
         #if player wins, value will be larger
         if board.getIsComplete() == true:
             return  eval(board)
+        elif branch == 2:
+            return eval(board)
 
         #get all potential next moves of board
         potentialPositions = getChildren(board)
@@ -163,7 +167,7 @@ class Board(object):
                         break
 
             #Get the min value of board state of the copied state
-            tempMax = MinMove(copyBoard)
+            tempMax = MinMove(copyBoard, branch+1)
 
             #if the found value is creater than current best value, it becomes new best value
             if(tempMax > currentBestValue):
