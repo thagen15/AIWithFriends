@@ -1,4 +1,7 @@
 from space import Space
+import copy
+import time
+
 class Board():
     """docstring for board."""
     def __init__(self):
@@ -17,6 +20,8 @@ class Board():
         return self.isComplete
     def whoseTurn(self):
         return self.turn
+    def nextTurn(self):
+        self.turn = abs(self.whoseTurn()-1)
     # def checkComplete(self):
     #     #If white stones has 5 in a row set isComplete to false
     #     if condition:
@@ -30,12 +35,12 @@ class Board():
     #     return self.isComplete
 
     def placeStone(self, player, xPos, yPos):
-        index = int(xPos)*int(yPos)
-
+        index = (int(yPos)-1)*15 + (int(xPos)-1)
+        print index
         if not self.spaces[index].isFilled:
             self.spaces[index].fill(player)
         else:
-            print ("Invalid move space is occupied by: ", self.spaces[index].occupiedBy)
+            print ('Invalid move space is occupied by: ', self.spaces[index].occupiedBy)
 
 
 
@@ -55,7 +60,8 @@ class Board():
         return children
 
     def minimax(self):
-
+        global startTime
+        startTime = time.time()
         #get all potential next moves
         potentialPositions = self.getChildren()
 
@@ -67,7 +73,7 @@ class Board():
         for child in  potentialPositions:
 
             #create a copy of the selfstate with the position now filled
-            copyself = self
+            copyself = copy.deepcopy(self)
             childPos = child.getPosition()
 
 
@@ -78,7 +84,9 @@ class Board():
 
             #Get the max value of self state of the copied state
             tempMax = copyself.minMove(0)
-
+            # global startTime
+            if time.time() - startTime > 5:
+                break
             #if the found value is creater than current best value, it becomes new best value
             if(tempMax > currentBestValue):
                 currentBestValue = tempMax
@@ -99,7 +107,12 @@ class Board():
         #if player wins, value will be larger
         # if self.getIsComplete() == true:
         #     return  evaluation(self)
+        global startTime
+        if time.time()-startTime>5:
+            return
+
         if branch == 2:
+            # print self.evaluation()
             return self.evaluation()
 
         #get all potential next moves of self
@@ -114,17 +127,19 @@ class Board():
         for child in  potentialPositions:
 
             #create a copy of the selfstate with the position now filled
-            copyself = self
+            copyself = copy.deepcopy(self)
             childPos = child.getPosition()
 
             for copySpace in copyself.getSpaces():
                 if copySpace.getPosition() == childPos:
-                    copySpace.fill(not copyself.whoseTurn())
+                    copySpace.fill(abs(copyself.whoseTurn()-1))
                     break
 
             #Get the min value of self state of the copied state
             tempMin = copyself.maxMove(branch+1)
-
+            # global startTime
+            if time.time() - startTime > 5:
+                break
             #if the found value is creater than current best value, it becomes new best value
             if(tempMin < currentWorstValue):
                 currentWorstValue = tempMin
@@ -142,11 +157,17 @@ class Board():
         #if game is complete, return the value of the gamestate
         #if opponent wins, the value will be small,
         #if player wins, value will be larger
-        # if self.getIsComplete() == true:
+        # if self.getIsComplete()
+            #create a copy of the selfstate with the position now filled == true:
         #     return  evaluation(self)
+
+        global startTime
+        if time.time() - startTime > 5:
+            return
         if branch == 2:
             return self.evaluation()
-        print "here2"
+
+        #print "here2"
         #get all potential next moves of self
         potentialPositions = self.getChildren()
 
@@ -160,8 +181,9 @@ class Board():
         for child in  potentialPositions:
 
             #create a copy of the selfstate with the position now filled
-            copyself = self
+            copyself = copy.deepcopy(self)
             childPos = child.getPosition()
+
             for copySpace in copyself.getSpaces():
                 if copySpace.getPosition() == childPos:
                     copySpace.fill(copyself.whoseTurn())
@@ -169,7 +191,9 @@ class Board():
 
             #Get the min value of self state of the copied state
             tempMax = copyself.minMove(branch+1)
-
+            # global startTime
+            if time.time() - startTime > 5:
+                break
             #if the found value is creater than current best value, it becomes new best value
             if(tempMax > currentBestValue):
                 currentBestValue = tempMax

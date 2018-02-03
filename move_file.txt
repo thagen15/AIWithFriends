@@ -1,1 +1,1 @@
-Human 3 4
+AIWithFriends 2 1

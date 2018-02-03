@@ -25,6 +25,7 @@ if __name__ == '__main__':
             file.write('Human '+ str(column)+' ' + str(row))
             file.close()
             moves+=1
+
         if moves %2 ==1:
             #read the move.txt file and update the board
             file = open("move_file.txt", "r")
@@ -43,12 +44,13 @@ if __name__ == '__main__':
             print move[2]
             board.placeStone(opponent, move[1], move[2])
 
+            board.nextTurn()
             #Process the board and do magic things to do best move
             optimalMove = board.minimax().getPosition()
             print (optimalMove)
             board.placeStone(color, optimalMove[0],optimalMove[1])
             #lastly write to the file
             file = open("move_file.txt", "w")
-            file.write('AIWithFriends'+str(optimalMove[0])+str(optimalMove[1]))
+            file.write('AIWithFriends '+str(optimalMove[0])+' '+str(optimalMove[1]))
             file.close()
             moves+=1
