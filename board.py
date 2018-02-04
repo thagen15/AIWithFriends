@@ -68,7 +68,7 @@ class Board():
             down = -1
             downRight = -1
             check = False
-            if not children:
+            if children:
                 for chainSpace in children:
                     if(chainSpace.getPosition() == tile.getPosition()):
                         check = True
@@ -129,7 +129,6 @@ class Board():
         startTime = time.time()
         #get all potential next moves
         potentialPositions = self.getChildren()
-        print(potentialPositions)
         #variables to return the best move
         currentBest = potentialPositions[0]
         currentBestValue = float('-inf')
@@ -150,8 +149,8 @@ class Board():
             #Get the max value of self state of the copied state
             tempMax = copyself.minMove(0, currentBestValue)
             # global startTime
-            # if time.time() - startTime > 9:
-            #     break
+            if time.time() - startTime > 9:
+                break
             print(tempMax)
             #if the found value is creater than current best value, it becomes new best value
             if(tempMax > currentBestValue):
@@ -175,8 +174,8 @@ class Board():
         # if self.getIsComplete() == true:
         #     return  evaluation(self)
         global startTime
-        # if time.time()-startTime>9:
-        #     return
+        if time.time()-startTime>9:
+            return float('-inf')
 
         if branch == 2:
             #print self.evaluation()
@@ -208,9 +207,8 @@ class Board():
             if(tempMin < alpha):
                 currentWorstValue = alpha
                 break
-            # global startTime
-            # if time.time() - startTime > 9:
-            #     break
+            if time.time() - startTime > 9:
+                break
             #if the found value is creater than current best value, it becomes new best value
             if(tempMin < currentWorstValue):
                 currentWorstValue = tempMin
@@ -233,8 +231,8 @@ class Board():
         #     return  evaluation(self)
 
         global startTime
-        # if time.time() - startTime > 9:
-        #     return
+        if time.time() - startTime > 9:
+            return float('inf')
         if branch == 2:
             return self.evaluation()
 
@@ -266,8 +264,8 @@ class Board():
                 currentBestValue = alpha
                 break
             # global startTime
-            # # if time.time() - startTime > 9:
-            #     break
+            if time.time() - startTime > 9:
+                break
             #if the found value is creater than current best value, it becomes new best value
             if(tempMax > currentBestValue):
                 currentBestValue = tempMax
@@ -960,15 +958,31 @@ class Board():
 
         chainList = []
         tempList = []
+        tempHoriz = []
+        tempVert = []
+        tempDiag1 = []
+        tempDiag2 = []
 
-        chainList.append(self.chainHoriz())
-        chainList.append(self.chainVert())
-        chainList.append(self.chainDiag1())
-        chainList.append(self.chainDiag2())
+        tempHoriz = self.chainHoriz()
+        tempVert = self.chainVert()
+        tempDiag1 = self.chainDiag1()
+        tempDiag2 = self.chainDiag2()
 
-        if not chainList:
+        if tempHoriz:
+            for element in tempHoriz:
+                chainList.append(element)
+        if tempVert:
+            for element in tempVert:
+                chainList.append(element)
+        if tempDiag1:
+            for element in tempDiag1:
+                chainList.append(element)
+        if tempDiag2:
+            for element in tempDiag2:
+                chainList.append(element)
+
+        if chainList:
             for element in chainList:
-                print(element)
                 tempList.append((element.getPosition()[0]-1) + (element.getPosition()[1]-1)*15)
 
             tempList = list(set(tempList))
@@ -1005,10 +1019,10 @@ class Board():
 
                 if(left):
                     if(self.getSpaces()[space+1].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces[space+1])
+                        chainList.append(self.getSpaces()[space+1])
                 elif(right):
                      if(self.getSpaces()[space-1].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces[space-1])
+                        chainList.append(self.getSpaces()[space-1])
 
         #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (chainList)
@@ -1038,10 +1052,10 @@ class Board():
 
                 if(up):
                     if(self.getSpaces()[space+15].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces[space+1])
+                        chainList.append(self.getSpaces()[space+1])
                 elif(down):
                      if(self.getSpaces()[space-15].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces[space-1])
+                        chainList.append(self.getSpaces()[space-1])
 
         #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (chainList)
@@ -1070,10 +1084,10 @@ class Board():
 
                 if(upLeft):
                     if(self.getSpaces()[space+16].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces[space+1])
+                        chainList.append(self.getSpaces()[space+1])
                 elif(downRight):
                      if(self.getSpaces()[space-16].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces[space-1])
+                        chainList.append(self.getSpaces()[space-1])
 
         #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (chainList)
@@ -1103,10 +1117,10 @@ class Board():
 
                 if(upRight):
                     if(self.getSpaces()[space+14].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces[space+1])
+                        chainList.append(self.getSpaces()[space+1])
                 elif(downLeft):
                      if(self.getSpaces()[space-14].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces[space-1])
+                        chainList.append(self.getSpaces()[space-1])
 
         #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (chainList)
