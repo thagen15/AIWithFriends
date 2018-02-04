@@ -22,6 +22,7 @@ class Board():
         return self.turn
     def nextTurn(self):
         self.turn = abs(self.whoseTurn()-1)
+
     # def checkComplete(self):
     #     #If white stones has 5 in a row set isComplete to false
     #     if condition:
@@ -67,9 +68,10 @@ class Board():
             down = -1
             downRight = -1
             check = False
-            for chainSpace in children:
-                if(chainSpace.getPosition() == tile.getPosition()):
-                    check = True
+            if not children:
+                for chainSpace in children:
+                    if(chainSpace.getPosition() == tile.getPosition()):
+                        check = True
 
             if(check != True):
                 if not tile.getIsFilled():
@@ -127,7 +129,7 @@ class Board():
         startTime = time.time()
         #get all potential next moves
         potentialPositions = self.getChildren()
-
+        print(potentialPositions)
         #variables to return the best move
         currentBest = potentialPositions[0]
         currentBestValue = float('-inf')
@@ -957,14 +959,23 @@ class Board():
     def getChains(self):
 
         chainList = []
+        tempList = []
 
         chainList.append(self.chainHoriz())
         chainList.append(self.chainVert())
         chainList.append(self.chainDiag1())
         chainList.append(self.chainDiag2())
 
-        chainList = list(set(chainList))
+        if not chainList:
+            for element in chainList:
+                print(element)
+                tempList.append((element.getPosition()[0]-1) + (element.getPosition()[1]-1)*15)
 
+            tempList = list(set(tempList))
+            chainList =[]
+
+            for chain in tempList:
+                chainList.append(self.getSpaces()[chain])
 
         return chainList
 

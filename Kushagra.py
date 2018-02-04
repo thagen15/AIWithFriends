@@ -39,7 +39,7 @@ if __name__ == '__main__':
                 #move is split by spaces into 3 things, groupName Column Row
                 print(opponent)
                 print(move[1])
-                print ord(move[1])-96
+                #print ord(move[1])-96
                 print(move[2])
 
                 board.placeStone(opponent, ord(move[1])-96, move[2])
