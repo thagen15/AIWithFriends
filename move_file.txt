@@ -1,1 +1,1 @@
-AIWithFriends 2 1
+AIWithFriends 3 3
