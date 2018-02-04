@@ -36,7 +36,7 @@ class Board():
 
     def placeStone(self, player, xPos, yPos):
         index = (int(yPos)-1)*15 + (int(xPos)-1)
-        print index
+        print(index)
         if not self.spaces[index].isFilled:
             self.spaces[index].fill(player)
         else:
@@ -137,10 +137,11 @@ class Board():
                     break
 
             #Get the max value of self state of the copied state
-            tempMax = copyself.minMove(0)
+            tempMax = copyself.minMove(0, currentBestValue)
             # global startTime
-            if time.time() - startTime > 8:
-                break
+            # if time.time() - startTime > 9:
+            #     break
+            print(tempMax)
             #if the found value is creater than current best value, it becomes new best value
             if(tempMax > currentBestValue):
                 currentBestValue = tempMax
@@ -153,7 +154,7 @@ class Board():
 
 
 
-    def minMove(self, branch):
+    def minMove(self, branch, alpha):
         #print "here1"
         #check if game is done whether its a tie or someone wins
         # self.checkComplete()
@@ -163,8 +164,8 @@ class Board():
         # if self.getIsComplete() == true:
         #     return  evaluation(self)
         global startTime
-        if time.time()-startTime>8:
-            return
+        # if time.time()-startTime>9:
+        #     return
 
         if branch == 2:
             #print self.evaluation()
@@ -192,10 +193,13 @@ class Board():
 
             #Get the min value of self state of the copied state
 
-            tempMin = copyself.maxMove(branch+1)
-            # global startTime
-            if time.time() - startTime > 8:
+            tempMin = copyself.maxMove(branch+1, currentWorstValue)
+            if(tempMin < alpha):
+                currentWorstValue = alpha
                 break
+            # global startTime
+            # if time.time() - startTime > 9:
+            #     break
             #if the found value is creater than current best value, it becomes new best value
             if(tempMin < currentWorstValue):
                 currentWorstValue = tempMin
@@ -206,7 +210,7 @@ class Board():
 
 
 
-    def maxMove(self, branch):
+    def maxMove(self, branch, alpha):
 
         #check if game is done whether its a tie or someone wins
         # self.checkComplete()
@@ -218,8 +222,8 @@ class Board():
         #     return  evaluation(self)
 
         global startTime
-        if time.time() - startTime > 8:
-            return
+        # if time.time() - startTime > 9:
+        #     return
         if branch == 2:
             return self.evaluation()
 
@@ -246,10 +250,13 @@ class Board():
                     break
 
             #Get the min value of self state of the copied state
-            tempMax = copyself.minMove(branch+1)
-            # global startTime
-            if time.time() - startTime > 8:
+            tempMax = copyself.minMove(branch+1, currentBestValue)
+            if(tempMax > alpha):
+                currentBestValue = alpha
                 break
+            # global startTime
+            # # if time.time() - startTime > 9:
+            #     break
             #if the found value is creater than current best value, it becomes new best value
             if(tempMax > currentBestValue):
                 currentBestValue = tempMax
@@ -336,7 +343,7 @@ class Board():
         elif num5White > 0 and self.whoseTurn() == 1:
             return float('inf')
         else:
-            value = (1000 * num4Black + 100 * num3Black + 10 * num2Black + num1Black) - (1000 * num4White + 100 * num3White + 10 * num2White + num1White) #evaluation function
+            value = (1000000000 * num4Black + 1000000 * num3Black + 1000 * num2Black + num1Black) - (1000000000 * num4White + 1000000 * num3White + 1000 * num2White + num1White) #evaluation function
 
 
         return value

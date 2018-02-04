@@ -18,8 +18,8 @@ if __name__ == '__main__':
         # time.sleep(.1)
         # if os.path.isfile('AIWithFriends.go'): #main python file to run our code from
         if moves %2 ==0:
-            column=raw_input("Column: ")
-            row=raw_input("Row: ")
+            column=input("Column: ")
+            row=input("Row: ")
 
             file = open("move_file.txt", "w")
             file.write('Human '+ str(column)+' ' + str(row))
@@ -39,9 +39,9 @@ if __name__ == '__main__':
             #Otherwise, a move has been made. Process the latest move and update our board
             # else:
             #move is split by spaces into 3 things, groupName Column Row
-            print opponent
-            print move[1]
-            print move[2]
+            print(opponent)
+            print(move[1])
+            print(move[2])
             board.placeStone(opponent, move[1], move[2])
 
             board.nextTurn()
