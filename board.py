@@ -51,6 +51,9 @@ class Board():
         # for i in range(1,16):
         #     for j in range(1,16):
         #
+
+        children = self.getChains()
+
         for tile in self.getSpaces():
             # if(self.getSpaces()[i*j].getIsFilled() == False):
             #print i*j
@@ -63,53 +66,59 @@ class Board():
             downLeft = -1
             down = -1
             downRight = -1
+            check = False
+            for chainSpace in chainList:
+                if(chainSpace.getPosition() == tile.getPosition()):
+                    check = True
 
-            if not tile.getIsFilled():
-                currentPosX = tile.getPosition()[0]
-                currentPosY = tile.getPosition()[1]
-                currentPos = ((tile.getPosition()[1]-1)*15) + (tile.getPosition()[0]-1)
-                if(currentPosX -1 > 0 and currentPosY -1 > 0):
-                    upLeft = currentPos -16
-                if(currentPosY -1 > 0):
-                    up = currentPos - 15
-                if(15-currentPosX > 0 and currentPosY -1 > 0):
-                    upRight = currentPos - 14
-                if(currentPosX -1 > 0):
-                    left = currentPos -1
-                if(15-currentPosX > 0):
-                    right = currentPos + 1
-                if(currentPosX -1 > 0 and 15 - currentPosY > 0):
-                    downLeft = currentPos + 14
-                if(15 - currentPosY > 0):
-                    down = currentPos + 15
-                if(15-currentPosX > 0 and 15 - currentPosY > 0):
-                    downRight = currentPos + 16
+            if(check != True):
+                if not tile.getIsFilled():
+
+                    currentPosX = tile.getPosition()[0]
+                    currentPosY = tile.getPosition()[1]
+                    currentPos = ((tile.getPosition()[1]-1)*15) + (tile.getPosition()[0]-1)
+                    if(currentPosX -1 > 0 and currentPosY -1 > 0):
+                        upLeft = currentPos -16
+                    if(currentPosY -1 > 0):
+                        up = currentPos - 15
+                    if(15-currentPosX > 0 and currentPosY -1 > 0):
+                        upRight = currentPos - 14
+                    if(currentPosX -1 > 0):
+                        left = currentPos -1
+                    if(15-currentPosX > 0):
+                        right = currentPos + 1
+                    if(currentPosX -1 > 0 and 15 - currentPosY > 0):
+                        downLeft = currentPos + 14
+                    if(15 - currentPosY > 0):
+                        down = currentPos + 15
+                    if(15-currentPosX > 0 and 15 - currentPosY > 0):
+                        downRight = currentPos + 16
 
 
-                if(upLeft != -1):
-                    if(self.getSpaces()[upLeft].getOccupiedBy() != 2):
-                        children.append(tile)
-                if(up != -1):
-                    if (self.getSpaces()[up].getOccupiedBy() != 2):
-                        children.append(tile)
-                if (upRight != -1):
-                    if (self.getSpaces()[upRight].getOccupiedBy() != 2):
-                        children.append(tile)
-                if (left != -1):
-                    if (self.getSpaces()[left].getOccupiedBy() != 2):
-                        children.append(tile)
-                if (right != -1):
-                    if (self.getSpaces()[right].getOccupiedBy() != 2):
-                        children.append(tile)
-                if (downLeft != -1):
-                    if (self.getSpaces()[downLeft].getOccupiedBy() != 2):
-                        children.append(tile)
-                if (down != -1):
-                    if (self.getSpaces()[down].getOccupiedBy() != 2):
-                        children.append(tile)
-                if (downRight != -1):
-                    if (self.getSpaces()[downRight].getOccupiedBy() != 2):
-                        children.append(tile)
+                    if(upLeft != -1):
+                        if(self.getSpaces()[upLeft].getOccupiedBy() != 2):
+                            children.append(tile)
+                    if(up != -1):
+                        if (self.getSpaces()[up].getOccupiedBy() != 2):
+                            children.append(tile)
+                    if (upRight != -1):
+                        if (self.getSpaces()[upRight].getOccupiedBy() != 2):
+                            children.append(tile)
+                    if (left != -1):
+                        if (self.getSpaces()[left].getOccupiedBy() != 2):
+                            children.append(tile)
+                    if (right != -1):
+                        if (self.getSpaces()[right].getOccupiedBy() != 2):
+                            children.append(tile)
+                    if (downLeft != -1):
+                        if (self.getSpaces()[downLeft].getOccupiedBy() != 2):
+                            children.append(tile)
+                    if (down != -1):
+                        if (self.getSpaces()[down].getOccupiedBy() != 2):
+                            children.append(tile)
+                    if (downRight != -1):
+                        if (self.getSpaces()[downRight].getOccupiedBy() != 2):
+                            children.append(tile)
         # print children
         return children
 
@@ -944,3 +953,149 @@ class Board():
 
         #returns the number of vertical rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (dcount1, dcount2, dcount3, dcount4, dcount5)
+
+    def getChains(self):
+
+        chainList = []
+
+        chainList.append(self.chainHoriz())
+        chainList.append(self.chainVert())
+        chainList.append(self.chainDiag1())
+        chainList.append(self.chainDiag2())
+
+        chainList = list(set(chainList))
+
+
+        return chainList
+
+
+        #check horizontal
+    def chainHoriz(self):
+        turn = 2
+        left = False
+        right = False
+        chainList = []
+
+        #go through eat space and check which ones are viable
+        for space in range(0,225):
+            turn = self.getSpaces()[space].getOccupiedBy()
+            if(turn != 2):
+
+                #look at spaces 0 right 4 left
+                if (self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
+                    left1=self.getSpaces()[space-1].getOccupiedBy()
+                    right1=self.getSpaces()[space+1].getOccupiedBy()
+                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+                    if (left1 == turn):
+                        left = True
+                    if (right1 == turn):
+                        right = True
+
+
+                if(left):
+                    if(self.getSpaces()[space+1].getOccupiedBy() == 2):
+                        chainList.append(self.getSpaces[space+1])
+                elif(right):
+                     if(self.getSpaces()[space-1].getOccupiedBy() == 2):
+                        chainList.append(self.getSpaces[space-1])
+
+        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        return (chainList)
+
+        #check horizontal
+    def chainVert(self):
+        turn = 2
+        up = False
+        down = False
+        chainList = []
+
+        #go through eat space and check which ones are viable
+        for space in range(0,225):
+            turn = self.getSpaces()[space].getOccupiedBy()
+            if(turn != 2):
+
+                #look at spaces 0 right 4 left
+                if (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
+                    up1=self.getSpaces()[space-15].getOccupiedBy()
+                    down1=self.getSpaces()[space+15].getOccupiedBy()
+                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+                    if (up1 == turn):
+                        up = True
+                    if (down1 == turn):
+                        down = True
+
+
+                if(up):
+                    if(self.getSpaces()[space+15].getOccupiedBy() == 2):
+                        chainList.append(self.getSpaces[space+1])
+                elif(down):
+                     if(self.getSpaces()[space-15].getOccupiedBy() == 2):
+                        chainList.append(self.getSpaces[space-1])
+
+        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        return (chainList)
+
+    def chainDiag1(self):
+        turn = 2
+        upLeft = False
+        downRight = False
+        chainList = []
+
+        #go through eat space and check which ones are viable
+        for space in range(0,225):
+            turn = self.getSpaces()[space].getOccupiedBy()
+            if(turn != 2):
+
+                #look at spaces 0 right 4 left
+                if (self.getSpaces()[space].getPosition()[0]-1)>0 and (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
+                    upLeft1=self.getSpaces()[space-16].getOccupiedBy()
+                    downRight1=self.getSpaces()[space+16].getOccupiedBy()
+                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+                    if (upLeft1 == turn):
+                        upLeft = True
+                    if (downRight1 == turn):
+                        downRight = True
+
+
+                if(upLeft):
+                    if(self.getSpaces()[space+16].getOccupiedBy() == 2):
+                        chainList.append(self.getSpaces[space+1])
+                elif(downRight):
+                     if(self.getSpaces()[space-16].getOccupiedBy() == 2):
+                        chainList.append(self.getSpaces[space-1])
+
+        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        return (chainList)
+
+
+    def chainDiag2(self):
+        turn = 2
+        upRight = False
+        downLeft = False
+        chainList = []
+
+        #go through eat space and check which ones are viable
+        for space in range(0,225):
+            turn = self.getSpaces()[space].getOccupiedBy()
+            if(turn != 2):
+
+                #look at spaces 0 right 4 left
+                if (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0 and (self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
+                    upRight1=self.getSpaces()[space-14].getOccupiedBy()
+                    downLeft1=self.getSpaces()[space+14].getOccupiedBy()
+                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+                    if (upRight1 == turn):
+                        upRight = True
+                    if (downLeft1 == turn):
+                        downLeft = True
+
+
+                if(upRight):
+                    if(self.getSpaces()[space+14].getOccupiedBy() == 2):
+                        chainList.append(self.getSpaces[space+1])
+                elif(downLeft):
+                     if(self.getSpaces()[space-14].getOccupiedBy() == 2):
+                        chainList.append(self.getSpaces[space-1])
+
+        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        return (chainList)
