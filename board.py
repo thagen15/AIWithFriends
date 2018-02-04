@@ -11,6 +11,8 @@ class Board():
             for x in range(1,16):
                 self.spaces.append(Space(x,y))
 
+        print(len(self.getSpaces()))
+
         self.isComplete = False
         self.turn = 0
 
@@ -1002,29 +1004,14 @@ class Board():
         tempDiag23w = []
         singles = []
 
-        tempHoriz2 = self.chainHoriz2(turn)
-        tempHoriz3 = self.chainHoriz3(turn)
+        
         tempHoriz4 = self.chainHoriz4(turn)
-        tempVert2 = self.chainVert2(turn)
-        tempVert3 = self.chainVert3(turn)
         tempVert4 = self.chainVert4(turn)
-        tempDiag12 = self.chainDiag12(turn)
-        tempDiag13 = self.chainDiag13(turn)
         tempDiag14 = self.chainDiag14(turn)
-        tempDiag22 = self.chainDiag22(turn)
-        tempDiag23 = self.chainDiag23(turn)
         tempDiag24 = self.chainDiag24(turn)
-        tempHoriz2w = self.chainHoriz2(opp)
-        tempHoriz3w = self.chainHoriz3(opp)
         tempHoriz4w = self.chainHoriz4(opp)
-        tempVert2w = self.chainVert2(opp)
-        tempVert3w = self.chainVert3(opp)
         tempVert4w = self.chainVert4(opp)
-        tempDiag12w = self.chainDiag12(opp)
-        tempDiag13w = self.chainDiag13(opp)
         tempDiag14w = self.chainDiag14(opp)
-        tempDiag22w = self.chainDiag22(opp)
-        tempDiag23w = self.chainDiag23(opp)
         tempDiag24w = self.chainDiag24(opp)
 
         if tempHoriz4w:
@@ -1053,6 +1040,15 @@ class Board():
                 chainList.append(element)
 
         if not chainList:
+            tempHoriz3 = self.chainHoriz3(turn)
+            tempVert3 = self.chainVert3(turn)
+            tempDiag13 = self.chainDiag13(turn)
+            tempDiag23 = self.chainDiag23(turn)
+            tempHoriz3w = self.chainHoriz3(opp)
+            tempVert3w = self.chainVert3(opp)
+            tempDiag13w = self.chainDiag13(opp)
+            tempDiag23w = self.chainDiag23(opp)
+
             if tempHoriz3w:
                 for element in tempHoriz3w:
                     chainList.append(element)
@@ -1079,6 +1075,15 @@ class Board():
                     chainList.append(element)
 
         if not chainList:
+            tempHoriz2 = self.chainHoriz2(turn)
+            tempVert2 = self.chainVert2(turn)
+            tempDiag12 = self.chainDiag12(turn)
+            tempDiag22 = self.chainDiag22(turn)
+            tempHoriz2w = self.chainHoriz2(opp)
+            tempVert2w = self.chainVert2(opp)
+            tempDiag12w = self.chainDiag12(opp)
+            tempDiag22w = self.chainDiag22(opp)
+
             if tempHoriz2w:
                 for element in tempHoriz2w:
                     chainList.append(element)
@@ -1135,15 +1140,17 @@ class Board():
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
                 #look at spaces 0 right 4 left
-                if (self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
+                if (self.getSpaces()[space].getPosition()[0]-2)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
                     left1=self.getSpaces()[space-1].getOccupiedBy()
-                    right1=self.getSpaces()[space+1].getOccupiedBy()
                     #check to make sure all these spaces are either blank or the color of the player whose turn it is
                     if (left1 == turn):
                         left = True
+
+                if((15-self.getSpaces()[space].getPosition()[0])>0 and (self.getSpaces()[space].getPosition()[0]-1)>0):
+                    right1=self.getSpaces()[space+1].getOccupiedBy()
+
                     if (right1 == turn):
                         right = True
-
 
                 if(left):
                     if(self.getSpaces()[space+1].getOccupiedBy() == 2):
@@ -1154,7 +1161,6 @@ class Board():
 
         #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (chainList)
-
             #check horizontal
     def chainHoriz3(self, turn):
         left = False
@@ -1181,6 +1187,7 @@ class Board():
                         right = True
 
                 if(left):
+                    print(space)
                     if(self.getSpaces()[space+1].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+1])
                 elif(right):
@@ -1236,16 +1243,19 @@ class Board():
         #go through eat space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
+
                 #look at spaces 0 right 4 left
                 if (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     up1=self.getSpaces()[space-15].getOccupiedBy()
-                    down1=self.getSpaces()[space+15].getOccupiedBy()
                     #check to make sure all these spaces are either blank or the color of the player whose turn it is
                     if (up1 == turn):
                         up = True
+
+                if((15-self.getSpaces()[space].getPosition()[1])>0 and (self.getSpaces()[space].getPosition()[1]-1)>0):
+                    down1=self.getSpaces()[space+15].getOccupiedBy()
+
                     if (down1 == turn):
                         down = True
-
 
                 if(up):
                     if(self.getSpaces()[space+15].getOccupiedBy() == 2):
@@ -1340,13 +1350,15 @@ class Board():
                 #look at spaces 0 right 4 left
                 if (self.getSpaces()[space].getPosition()[0]-1)>0 and (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     upLeft1=self.getSpaces()[space-16].getOccupiedBy()
-                    downRight1=self.getSpaces()[space+16].getOccupiedBy()
                     #check to make sure all these spaces are either blank or the color of the player whose turn it is
                     if (upLeft1 == turn):
                         upLeft = True
+
+                if((15-self.getSpaces()[space].getPosition()[0])>0 and (15-self.getSpaces()[space].getPosition()[1])>0 and self.getSpaces()[space].getPosition()[0]-1)>0 and (self.getSpaces()[space].getPosition()[1]-1)>0:
+                    downRight1=self.getSpaces()[space+16].getOccupiedBy()
+
                     if (downRight1 == turn):
                         downRight = True
-
 
                 if(upLeft):
                     if(self.getSpaces()[space+16].getOccupiedBy() == 2):
@@ -1442,13 +1454,15 @@ class Board():
                 #look at spaces 0 right 4 left
                 if (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0 and (self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     upRight1=self.getSpaces()[space-14].getOccupiedBy()
-                    downLeft1=self.getSpaces()[space+14].getOccupiedBy()
                     #check to make sure all these spaces are either blank or the color of the player whose turn it is
                     if (upRight1 == turn):
                         upRight = True
+
+                if((self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0 and self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
+                    downLeft1=self.getSpaces()[space+14].getOccupiedBy()
+
                     if (downLeft1 == turn):
                         downLeft = True
-
 
                 if(upRight):
                     if(self.getSpaces()[space+14].getOccupiedBy() == 2):
