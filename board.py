@@ -149,7 +149,7 @@ class Board():
             #Get the max value of self state of the copied state
             tempMax = copyself.minMove(0, currentBestValue)
             # global startTime
-            if time.time() - startTime > 9:
+            if time.time() - startTime > 8:
                 break
             print(tempMax)
             #if the found value is creater than current best value, it becomes new best value
@@ -174,7 +174,7 @@ class Board():
         # if self.getIsComplete() == true:
         #     return  evaluation(self)
         global startTime
-        if time.time()-startTime>9:
+        if time.time()-startTime>8:
             return float('-inf')
 
         if branch == 2:
@@ -207,7 +207,7 @@ class Board():
             if(tempMin < alpha):
                 currentWorstValue = alpha
                 break
-            if time.time() - startTime > 9:
+            if time.time() - startTime > 8:
                 break
             #if the found value is creater than current best value, it becomes new best value
             if(tempMin < currentWorstValue):
@@ -231,7 +231,7 @@ class Board():
         #     return  evaluation(self)
 
         global startTime
-        if time.time() - startTime > 9:
+        if time.time() - startTime > 8:
             return float('inf')
         if branch == 2:
             return self.evaluation()
@@ -264,7 +264,7 @@ class Board():
                 currentBestValue = alpha
                 break
             # global startTime
-            if time.time() - startTime > 9:
+            if time.time() - startTime > 8:
                 break
             #if the found value is creater than current best value, it becomes new best value
             if(tempMax > currentBestValue):
