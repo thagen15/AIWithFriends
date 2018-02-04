@@ -13,6 +13,8 @@ if __name__ == '__main__':
     #While the end of game file isn't there
     while not os.path.isfile('end_game'): #main python file to run our code from
 
+        while not os.path.isfile(teamName+'.go'):
+            go = 9
 
         #is our prompt file in the path
         #ensure we are not writing and checking to fast

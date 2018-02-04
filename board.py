@@ -67,7 +67,7 @@ class Board():
             down = -1
             downRight = -1
             check = False
-            for chainSpace in chainList:
+            for chainSpace in children:
                 if(chainSpace.getPosition() == tile.getPosition()):
                     check = True
 
