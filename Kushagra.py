@@ -5,8 +5,8 @@ from space import Space
 if __name__ == '__main__':
     board = Board()
     #White is 1, Black is 2
-    color = 1
-    opponent = 0
+    color = 0
+    opponent = 1
 
     teamName = 'Kushagra'
 
@@ -30,6 +30,7 @@ if __name__ == '__main__':
                         opponent = 1
 
                         board.placeStone(color,8,8)
+
                         file = open("move_file", "w")
                         file.write(teamName+' h 8')
                         file.close()
@@ -37,6 +38,8 @@ if __name__ == '__main__':
                     #Otherwise, a move has been made. Process the latest move and update our board
                     else:
                         #move is split by spaces into 3 things, groupName Column Row
+                        board.nextTurn()
+
                         print(opponent)
                         print(move[1])
                         #print ord(move[1])-96
