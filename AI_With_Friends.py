@@ -12,10 +12,10 @@ if __name__ == '__main__':
 
     #While the end of game file isn't there
     while not os.path.isfile('end_game') : #main python file to run our code from
-        while os.path.isfile(teamName+'.go':)
+        while os.path.isfile(teamName+'.go'):
             #is our prompt file in the path
             #ensure we are not writing and checking to fast
-            time.sleep(.1)
+            time.sleep(.5)
             if os.path.isfile(teamName+'.go'): #main python file to run our code from
                 #read the move.txt file and update the board
                 file = open("move_file", "r")
@@ -26,7 +26,7 @@ if __name__ == '__main__':
                     color = 0
                     opponent = 1
 
-                    board.placeStone(color,7,7)
+                    board.placeStone(color,8,8)
                     file = open("move_file", "w")
                     file.write(teamName+' h 8')
                     file.close()

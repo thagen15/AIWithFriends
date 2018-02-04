@@ -37,7 +37,6 @@ class Board():
 
     def placeStone(self, player, xPos, yPos):
         index = (int(yPos)-1)*15 + (int(xPos)-1)
-        print(index)
         if not self.spaces[index].isFilled:
             self.spaces[index].fill(player)
         else:
@@ -54,6 +53,11 @@ class Board():
         #
 
         children = self.getChains()
+        counter = 0
+        if children:
+            for chainSpace in children:
+                print("chains ", counter, " x: ", chainSpace.getPosition()[0], " y: ", chainSpace.getPosition()[1])
+                counter +=1
 
         for tile in self.getSpaces():
             # if(self.getSpaces()[i*j].getIsFilled() == False):
@@ -68,6 +72,8 @@ class Board():
             down = -1
             downRight = -1
             check = False
+            
+
             if children:
                 for chainSpace in children:
                     if(chainSpace.getPosition() == tile.getPosition()):
@@ -129,6 +135,12 @@ class Board():
         startTime = time.time()
         #get all potential next moves
         potentialPositions = self.getChildren()
+
+        counter = 0
+        for potential in potentialPositions:
+            print(counter, " x: ", potential.getPosition()[0], " y: ", potential.getPosition()[1])
+            counter += 1
+
         #variables to return the best move
         currentBest = potentialPositions[0]
         currentBestValue = float('-inf')
@@ -962,6 +974,7 @@ class Board():
         tempVert = []
         tempDiag1 = []
         tempDiag2 = []
+        singles = []
 
         tempHoriz = self.chainHoriz()
         tempVert = self.chainVert()
@@ -981,8 +994,14 @@ class Board():
             for element in tempDiag2:
                 chainList.append(element)
 
+
+        if not chainList:
+            chainList = self.getSingles();
+            print("singles")
         if chainList:
             for element in chainList:
+                # print("begining x: ", element.getPosition()[0], " y: ", element.getPosition()[1])
+
                 tempList.append((element.getPosition()[0]-1) + (element.getPosition()[1]-1)*15)
 
             tempList = list(set(tempList))
@@ -1052,10 +1071,10 @@ class Board():
 
                 if(up):
                     if(self.getSpaces()[space+15].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+1])
+                        chainList.append(self.getSpaces()[space+15])
                 elif(down):
                      if(self.getSpaces()[space-15].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-1])
+                        chainList.append(self.getSpaces()[space-15])
 
         #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (chainList)
@@ -1084,10 +1103,10 @@ class Board():
 
                 if(upLeft):
                     if(self.getSpaces()[space+16].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+1])
+                        chainList.append(self.getSpaces()[space+16])
                 elif(downRight):
                      if(self.getSpaces()[space-16].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-1])
+                        chainList.append(self.getSpaces()[space-16])
 
         #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (chainList)
@@ -1117,10 +1136,77 @@ class Board():
 
                 if(upRight):
                     if(self.getSpaces()[space+14].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+1])
+                        chainList.append(self.getSpaces()[space+14])
                 elif(downLeft):
                      if(self.getSpaces()[space-14].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-1])
+                        chainList.append(self.getSpaces()[space-14])
 
         #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (chainList)
+
+    def getSingles(self):
+
+        turn = self.whoseTurn()
+        children = []
+
+        for tile in self.getSpaces():
+
+            upLeft = -1
+            up = -1
+            upRight = -1
+            left = -1
+            right = -1
+            downLeft = -1
+            down = -1
+            downRight = -1
+            check = False
+
+            if not tile.getIsFilled():
+
+                currentPosX = tile.getPosition()[0]
+                currentPosY = tile.getPosition()[1]
+                currentPos = ((tile.getPosition()[1]-1)*15) + (tile.getPosition()[0]-1)
+                if(currentPosX -1 > 0 and currentPosY -1 > 0):
+                    upLeft = currentPos -16
+                if(currentPosY -1 > 0):
+                    up = currentPos - 15
+                if(15-currentPosX > 0 and currentPosY -1 > 0):
+                    upRight = currentPos - 14
+                if(currentPosX -1 > 0):
+                    left = currentPos -1
+                if(15-currentPosX > 0):
+                    right = currentPos + 1
+                if(currentPosX -1 > 0 and 15 - currentPosY > 0):
+                    downLeft = currentPos + 14
+                if(15 - currentPosY > 0):
+                    down = currentPos + 15
+                if(15-currentPosX > 0 and 15 - currentPosY > 0):
+                    downRight = currentPos + 16
+
+
+                if(upLeft != -1):
+                    if(self.getSpaces()[upLeft].getOccupiedBy() != 2 and self.getSpaces()[upLeft].getOccupiedBy() == turn):
+                        children.append(tile)
+                if(up != -1):
+                    if (self.getSpaces()[up].getOccupiedBy() != 2 and self.getSpaces()[up].getOccupiedBy() == turn):
+                        children.append(tile)
+                if (upRight != -1):
+                    if (self.getSpaces()[upRight].getOccupiedBy() != 2 and self.getSpaces()[upRight].getOccupiedBy() == turn):
+                        children.append(tile)
+                if (left != -1):
+                    if (self.getSpaces()[left].getOccupiedBy() != 2 and self.getSpaces()[left].getOccupiedBy() == turn):
+                        children.append(tile)
+                if (right != -1):
+                    if (self.getSpaces()[right].getOccupiedBy() != 2 and self.getSpaces()[right].getOccupiedBy() == turn):
+                        children.append(tile)
+                if (downLeft != -1):
+                    if (self.getSpaces()[downLeft].getOccupiedBy() != 2 and self.getSpaces()[downLeft].getOccupiedBy() == turn):
+                        children.append(tile)
+                if (down != -1):
+                    if (self.getSpaces()[down].getOccupiedBy() != 2 and self.getSpaces()[down].getOccupiedBy() == turn):
+                        children.append(tile)
+                if (downRight != -1):
+                    if (self.getSpaces()[downRight].getOccupiedBy() != 2 and self.getSpaces()[downRight].getOccupiedBy() == turn):
+                        children.append(tile)
+
+        return children
