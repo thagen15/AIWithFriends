@@ -53,7 +53,8 @@ There are quite some specific actions our program takes:
  - Looks at chains of 2s after chains of 3 before considering other spaces
  - If there are no chains, only looks at spaces that are next to already placed nodes of the same color
 
-#Results
+#Results:
+
 
 ##Tests:
 
