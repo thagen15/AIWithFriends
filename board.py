@@ -13,6 +13,7 @@ class Board():
 
         print(len(self.getSpaces()))
 
+        self.isFirstTurn = True
         self.isComplete = False
         self.turn = 0
 
@@ -38,6 +39,8 @@ class Board():
     #     return self.isComplete
 
     def placeStone(self, player, xPos, yPos):
+        if self.isFirstTurn and player ==0:
+            self.isFirstTurn = False
         index = (int(yPos)-1)*15 + (int(xPos)-1)
         if not self.spaces[index].isFilled:
             self.spaces[index].fill(player)
@@ -75,7 +78,7 @@ class Board():
                 down = -1
                 downRight = -1
                 check = False
-                
+
 
                 if children:
                     for chainSpace in children:
@@ -1006,7 +1009,7 @@ class Board():
         tempDiag23w = []
         singles = []
 
-        
+
         tempHoriz4 = self.chainHoriz4(turn)
         tempVert4 = self.chainVert4(turn)
         tempDiag14 = self.chainDiag14(turn)
@@ -1119,7 +1122,7 @@ class Board():
         if not chainList:
             print("singles")
             chainList = self.getSingles();
-            
+
         if chainList:
             for element in chainList:
                 # print("begining x: ", element.getPosition()[0], " y: ", element.getPosition()[1])

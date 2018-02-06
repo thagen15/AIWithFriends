@@ -39,22 +39,45 @@ if __name__ == '__main__':
                     else:
                         #move is split by spaces into 3 things, groupName Column Row
                         board.nextTurn()
-
                         print(opponent)
                         print(move[1])
                         #print ord(move[1])-96
                         print(move[2])
 
                         board.placeStone(opponent, ord(move[1])-96, move[2])
+                        if board.isFirstTurn:
+                            print 'here'
+                            print (ord(move[1])-96)
+                            print move[2]
+                            board.nextTurn()
+                            if (6 <= (ord(move[1])-96) and (ord(move[1])-96) <= 10) and (6 <= int(move[2]) and int(move[2])<= 10):
+                                board.placeStone(color, ord(move[1])-96, move[2])
+                                file = open("move_file", "w")
+                                file.write(teamName+' '+move[1]+' '+str(move[2]))
+                                file.close()
 
-                        board.nextTurn()
-                        #Process the board and do magic things to do best move
-                        optimalMove = board.minimax().getPosition()
-                        print (optimalMove)
-                        board.placeStone(color, optimalMove[0],optimalMove[1])
-                        #lastly write to the file
-                        letter = chr(optimalMove[0] + 96)
-                        # lastly write to the file
-                        file = open("move_file", "w")
-                        file.write(teamName + ' ' + letter + ' ' + str(optimalMove[1]))
-                        file.close()
+                            else:
+                                optimalMove = board.minimax().getPosition()
+                                print (optimalMove)
+                                board.placeStone(color, optimalMove[0],optimalMove[1])
+                                letter = chr(optimalMove[0]+64)
+                                #lastly write to the file
+                                file = open("move_file", "w")
+                                file.write(teamName+' '+letter+' '+str(optimalMove[1]))
+                                file.close()
+
+
+
+
+                        else:
+                            board.nextTurn()
+                            #Process the board and do magic things to do best move
+                            optimalMove = board.minimax().getPosition()
+                            print (optimalMove)
+                            board.placeStone(color, optimalMove[0],optimalMove[1])
+                            #lastly write to the file
+                            letter = chr(optimalMove[0] + 96)
+                            # lastly write to the file
+                            file = open("move_file", "w")
+                            file.write(teamName + ' ' + letter + ' ' + str(optimalMove[1]))
+                            file.close()
