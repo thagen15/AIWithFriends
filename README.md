@@ -54,7 +54,7 @@ There are quite some specific actions our program takes:
  - If there are no chains, only looks at spaces that are next to already placed nodes of the same color
 
 #Results:
-![alt text](https://raw.githubusercontent.com/thagen15/AIWithFriends/blob/master/Screenshot%20from%202018-02-06%2018-03-17.png)
+
 
 ##Tests:
 
