@@ -42,10 +42,10 @@ class Board():
         if self.isFirstTurn and player ==0:
             self.isFirstTurn = False
         index = (int(yPos)-1)*15 + (int(xPos)-1)
-        if not self.spaces[index].isFilled:
-            self.spaces[index].fill(player)
-        else:
-            print ('Invalid move space is occupied by: ', self.spaces[index].occupiedBy)
+        # if not self.spaces[index].isFilled:
+        self.spaces[index].fill(player)
+        # else:
+        #     print ('Invalid move space is occupied by: ', self.spaces[index].occupiedBy)
 
 
 

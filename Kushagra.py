@@ -46,10 +46,10 @@ if __name__ == '__main__':
 
                         board.placeStone(opponent, ord(move[1])-96, move[2])
                         if board.isFirstTurn:
-                            print 'here'
-                            print (ord(move[1])-96)
-                            print move[2]
-                            board.nextTurn()
+                            # print 'here'
+                            # print (ord(move[1])-96)
+                            # print move[2]
+                            # board.nextTurn()
                             if (6 <= (ord(move[1])-96) and (ord(move[1])-96) <= 10) and (6 <= int(move[2]) and int(move[2])<= 10):
                                 board.placeStone(color, ord(move[1])-96, move[2])
                                 file = open("move_file", "w")
