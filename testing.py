@@ -16,7 +16,7 @@ if __name__ == '__main__':
         #is our prompt file in the path
         #ensure we are not writing and checking to fast
         time.sleep(.1)
-        # if os.path.isfile(teamName+'.go'): #main python file to run our code from
+        if os.path.isfile(teamName+'.go'): #main python file to run our code from
             #read the move.txt file and update the board
             file = open("move_file.txt", "r")
             move = str(file.read()).split()

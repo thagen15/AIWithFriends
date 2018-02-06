@@ -161,6 +161,7 @@ class Board():
                     copySpace.fill(copyself.whoseTurn())
                     break
 
+            copyself.nextTurn()
             #Get the max value of self state of the copied state
             tempMax = copyself.minMove(0, currentBestValue)
             # global startTime
@@ -213,11 +214,12 @@ class Board():
 
             for copySpace in copyself.getSpaces():
                 if copySpace.getPosition() == childPos:
-                    copySpace.fill(abs(copyself.whoseTurn()-1))
+                    copySpace.fill(copyself.whoseTurn())
                     break
 
             #Get the min value of self state of the copied state
 
+            copyself.nextTurn()
             tempMin = copyself.maxMove(branch+1, currentWorstValue)
             if(tempMin < alpha):
                 currentWorstValue = alpha
@@ -1014,18 +1016,7 @@ class Board():
         tempDiag14w = self.chainDiag14(opp)
         tempDiag24w = self.chainDiag24(opp)
 
-        if tempHoriz4w:
-            for element in tempHoriz4w:
-                chainList.append(element)
-        if tempVert4w:
-            for element in tempVert4w:
-                chainList.append(element)
-        if tempDiag14w:
-            for element in tempDiag14w:
-                chainList.append(element)
-        if tempDiag24w:
-            for element in tempDiag24w:
-                chainList.append(element)
+
         if tempHoriz4:
             for element in tempHoriz4:
                 chainList.append(element)
@@ -1038,8 +1029,21 @@ class Board():
         if tempDiag24:
             for element in tempDiag24:
                 chainList.append(element)
+        if tempHoriz4w:
+            for element in tempHoriz4w:
+                chainList.append(element)
+        if tempVert4w:
+            for element in tempVert4w:
+                chainList.append(element)
+        if tempDiag14w:
+            for element in tempDiag14w:
+                chainList.append(element)
+        if tempDiag24w:
+            for element in tempDiag24w:
+                chainList.append(element)
 
         if not chainList:
+            print('chain3')
             tempHoriz3 = self.chainHoriz3(turn)
             tempVert3 = self.chainVert3(turn)
             tempDiag13 = self.chainDiag13(turn)
@@ -1075,6 +1079,7 @@ class Board():
                     chainList.append(element)
 
         if not chainList:
+            print("chain2")
             tempHoriz2 = self.chainHoriz2(turn)
             tempVert2 = self.chainVert2(turn)
             tempDiag12 = self.chainDiag12(turn)
@@ -1112,6 +1117,7 @@ class Board():
 
 
         if not chainList:
+            print("singles")
             chainList = self.getSingles();
             
         if chainList:
@@ -1328,6 +1334,7 @@ class Board():
                         down = True
 
                 if(up):
+                    print(space)
                     if(self.getSpaces()[space+15].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+15])
                 elif(down):
