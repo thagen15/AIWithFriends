@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
 
                     file = open("move_file", "w")
-                    file.write(teamName+' ')
+                    file.write(teamName+' h 8')
                     file.close()
 
 
@@ -48,11 +48,12 @@ if __name__ == '__main__':
 
                     if board.isFirstTurn:
                         board.nextTurn()
-                        # print 'here'
-                        # print (ord(move[1])-96)
-                        # print move[2]
+                        print 'here'
+                        print (ord(move[1])-96)
+                        print move[2]
 
-                        if (6 <= (ord(move[1])-96) and (ord(move[1])-96) <= 10) and (6 <= int(move[2]) and int(move[2])<= 10):
+                        if (6 <= (ord(move[1])-96) and (ord(move[1])-96)  <= 10) and (6 <= int(move[2]) and int(move[2])<= 10):
+                            print "HERE2"
                             board.placeStone(color, ord(move[1])-96, move[2])
                             file = open("move_file", "w")
                             file.write(teamName+' '+move[1]+' '+str(move[2]))

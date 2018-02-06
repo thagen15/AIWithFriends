@@ -8,7 +8,7 @@ if __name__ == '__main__':
     color = 0
     opponent = 1
 
-    teamName = 'Kushagra'
+    teamName = 'Clone'
 
     #While the end of game file isn't there
     while not os.path.isfile('end_game'): #main python file to run our code from
@@ -49,7 +49,7 @@ if __name__ == '__main__':
                             # print 'here'
                             # print (ord(move[1])-96)
                             # print move[2]
-                            board.nextTurn()
+                            # board.nextTurn()
                             if (6 <= (ord(move[1])-96) and (ord(move[1])-96) <= 10) and (6 <= int(move[2]) and int(move[2])<= 10):
                                 board.placeStone(color, ord(move[1])-96, move[2])
                                 file = open("move_file", "w")

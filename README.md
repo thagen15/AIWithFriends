@@ -17,7 +17,10 @@ Worcester Polytechnic Institute
  
 ## Compiling and Running:
 
-Our program was written in Python. To run the program one needs to have python installed on his system. Once this requirement is covered running the program is as easy as opening the command line, navigating to where the file is saved and typing “python *file_name” and hitting enter.
+Our program was written in Python. To run the program one needs to have python installed on his system. Once this requirement is covered running the program is as easy as opening the command line, navigating to where the file is saved and open 3 terminals:
+- In one terminal run python AI_With_Friends.py
+- in another terminals run python Kushagra.py
+- Finally run python referee.py AI_With_Friends Kushagra
 
 ## Utility Function:
 
@@ -31,7 +34,7 @@ Utility Function refers to the sum of preferences our agent has. In the case of 
 - B dots are stones of your color
 - W dots are stone of the opponent
 - All calculations were determined by the number of stones within 5 spaces of a stone
-- Starting at a stone, it looks 4 spaces to the left, 4 spaces to the right, 3 spaces to the left and 1 space to the right, 2 spaces to the left and 2 spaces to the right, 1 space to  the left and 3 spaces to the right and takes the largest chain from  these values. It does not evaluate a chain if there is a stone of the opposite color in any of these scenarios 
+- Starting at a stone, it looks 4 spaces to the left, 4 spaces to the right, 3 spaces to the left and 1 space to the right, 2 spaces to the left and 2 spaces to the right, 1 space to  the left and 3 spaces to the right and takes the largest chain from  these values. It does not evaluate a chain if there is a stone of the opposite color in any of these scenarios
 
 ##Heuristics & Strategies:
 
@@ -56,7 +59,7 @@ There are quite some specific actions our program takes:
 
 To test the integrity and reliability of our program we checked how it reacted and played in some specific cases. We tried to make sure the program can identify serious threats (eg. xxxx, xxx, x-xxx, xx-xx, xxx-x) and react to stop them (eg. oxxxx, oxxx, xoxxx, xxoxx, xxxox).
 
-We also had the program play against a copy of itself, in order to make sure that the program is able to complete a game without making any illegal moves, and without making illogical moves. We found that it will sometimes miss some chains with spaces in them (ie. xx-xx). When we tried to increase the branching factor, we started getting out of bounds errors which could be a problem in our checks but for lower branching factors, the program was able to finish games easily. 
+We also had the program play against a copy of itself, in order to make sure that the program is able to complete a game without making any illegal moves, and without making illogical moves. We found that it will sometimes miss some chains with spaces in them (ie. xx-xx). When we tried to increase the branching factor, we started getting out of bounds errors which could be a problem in our checks but for lower branching factors, the program was able to finish games easily.
 
 ##Strengths & Weaknesses:
 
