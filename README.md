@@ -10,6 +10,7 @@ Worcester Polytechnic Institute
 
 - Date: 6 February 2018
 - Github: https://github.com/thagen15/AIWithFriends
+
 ##Team Members:
 - Jason Abel				
 - Thomas Hagen
