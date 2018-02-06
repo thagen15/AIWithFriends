@@ -55,6 +55,8 @@ There are quite some specific actions our program takes:
 
 #Results:
 
+![alt text](output.png "Final state of the board when our two identical AI's play each other")
+
 
 ##Tests:
 
