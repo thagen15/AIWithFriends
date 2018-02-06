@@ -3,11 +3,7 @@
 ##Info
 - CS4341 Intro to AI
 - Project 1 C-term: Gomoku
-
-- Submitted to Professor Ahmedul Kabir
-of the
-Worcester Polytechnic Institute
-
+- Submitted to Professor Ahmedul Kabir of the Worcester Polytechnic Institute
 - Date: 6 February 2018
 
 ##Team Members:
@@ -16,17 +12,14 @@ Worcester Polytechnic Institute
 - Parmenion Patias
  
 ## Compiling and Running:
-
 Our program was written in Python. To run the program one needs to have python installed on his system. Once this requirement is covered running the program is as easy as opening the command line, navigating to where the file is saved and typing “python *file_name” and hitting enter.
 
 ## Utility Function:
-
 Utility Function refers to the sum of preferences our agent has. In the case of our program the agent wants to have 5 continuous dots in a row, column or diagonal. It also wants to stop the opponent from getting a 5 in a row, and it focuses on that the closer the opponent is to achieving his plan. We made our program play more defensively rather than offensively.
 
 ## Evaluation Function:
 
 - For our evaluation function, we tried to focus on how important it is not to allow the opponent to do 5 consecutive dots. To stop that from happening in our evaluation function 1 added dot in the 5 row increases the importance of that line by 100.
-
 - Eval(J)=[∑(1000000000*(# of 4 B dots)) +∑(1000000*(# of 3 B dots)) +∑(1000*(# of 2 B dots)) +∑(1*(# of 1 B dots)) ]-[∑(1000000000*(# of 4 W dots)) +∑(1000000*(# of 3 W dots)) +∑(1000*(# of 2 W dots)) +∑(1*(# of 1 W dots)) ]
 - B dots are stones of your color
 - W dots are stone of the opponent
