@@ -1,6 +1,6 @@
 # AIWithFriends
 
-##Info
+# Info
 - CS4341 Intro to AI
 - Project 1 C-term: Gomoku
 
@@ -11,7 +11,7 @@ Worcester Polytechnic Institute
 - Date: 6 February 2018
 - Github: https://github.com/thagen15/AIWithFriends
 
-##Team Members:
+## Team Members:
 - Jason Abel				
 - Thomas Hagen
 - Parmenion Patias
@@ -37,7 +37,7 @@ Utility Function refers to the sum of preferences our agent has. In the case of 
 - All calculations were determined by the number of stones within 5 spaces of a stone
 - Starting at a stone, it looks 4 spaces to the left, 4 spaces to the right, 3 spaces to the left and 1 space to the right, 2 spaces to the left and 2 spaces to the right, 1 space to  the left and 3 spaces to the right and takes the largest chain from  these values. It does not evaluate a chain if there is a stone of the opposite color in any of these scenarios
 
-##Heuristics & Strategies:
+## Heuristics & Strategies:
 
 There are quite some specific actions our program takes:
 
@@ -54,18 +54,18 @@ There are quite some specific actions our program takes:
  - Looks at chains of 2s after chains of 3 before considering other spaces
  - If there are no chains, only looks at spaces that are next to already placed nodes of the same color
 
-#Results:
+# Results:
 
-![alt text](output.png "Final state of the board when our two identical AI's play each other")
-
-
-##Tests:
+## Tests:
 
 To test the integrity and reliability of our program we checked how it reacted and played in some specific cases. We tried to make sure the program can identify serious threats (eg. xxxx, xxx, x-xxx, xx-xx, xxx-x) and react to stop them (eg. oxxxx, oxxx, xoxxx, xxoxx, xxxox).
 
 We also had the program play against a copy of itself, in order to make sure that the program is able to complete a game without making any illegal moves, and without making illogical moves. We found that it will sometimes miss some chains with spaces in them (ie. xx-xx). When we tried to increase the branching factor, we started getting out of bounds errors which could be a problem in our checks but for lower branching factors, the program was able to finish games easily.
 
-##Strengths & Weaknesses:
+![alt text](output.png "Final state of the board when our two identical AI's play each other")
+
+
+## Strengths & Weaknesses:
 
 α-β pruning works great in games such as gomoku where evaluating the state of the game is difficult. α-β pruning works by checking all (or many) possible moves; it finds what the game would look like x number of steps down and it makes the best choice given a logical opponent that would go for the best move as well.
 
@@ -75,6 +75,6 @@ We assume that the opponent will play logically, thus a program made to make the
 
 Our program will always be on the defensive when possible. If it sees a large chain of the opposite color, it will consider those spaces first before looking at chains of the same color. Right now the program only has a branching factor of 3 and when the branching factor is increased, the number of spaces explored goes down and there is eventually an error. Our program may also miss cases where there is a space between stones. ie) It may not recognize that BB BB will be a win on the next move.
 
-##Discussion (Evaluation and Heuristics):
+## Discussion (Evaluation and Heuristics):
 
 α-β pruning need to examine on average O(b^(d⁄2) ) nodes. Which is much less than other techniques such as minimax for examples which would require checking O(b^d ) nodes to make a decision. Also, our program checks 3 steps ahead from our current position and makes a choice based on that. This is done so we can explore as many nodes as possible while still playing within 10 seconds and write our own move. Had we a better system, or more time to think and act we would allow the program to calculate more moves before making a choice. We cut down on this exploration significantly more when we only look at nodes that are at the ends of chains. We also only limit the potential spaces to place a node by only looking at chains of 4 and nothing else. If there are no chains of 4, it will only look at chains of 3 and so on.
