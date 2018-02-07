@@ -17,46 +17,37 @@ class Board():
         self.isComplete = False
         self.turn = 0
 
+    #returns the array of spaces
     def getSpaces(self):
         return self.spaces
+    #returns if the game ends
     def getIsComplete(self):
         return self.isComplete
+    #returns whose turn it is
     def whoseTurn(self):
         return self.turn
+    #makes the turn the next player's turn
     def nextTurn(self):
         self.turn = abs(self.whoseTurn()-1)
 
-    # def checkComplete(self):
-    #     #If white stones has 5 in a row set isComplete to false
-    #     if condition:
-    #
-    #     #Else if black stones has 5 in a row set isComplete to false
-    #     elif:
-    #
-    #     #Else if the board is filled, the game is tied
-    #     else:
-    #         self.isComplete = False
-    #     return self.isComplete
-
+    #places a stone on the board
     def placeStone(self, player, xPos, yPos):
+        #checks for first turn
         if self.isFirstTurn and player ==0:
             self.isFirstTurn = False
         index = (int(yPos)-1)*15 + (int(xPos)-1)
+        #check for invalid move
         if not self.spaces[index].isFilled:
             self.spaces[index].fill(player)
         else:
             print ('Invalid move space is occupied by: ', self.spaces[index].occupiedBy)
 
-
-
+    #gets all potential spaces based on our hueristics and strategy
     def getChildren(self):
         #list of empty spaces
         children = []
-        #finds all empty spaces and puts into children
-        # for i in range(1,16):
-        #     for j in range(1,16):
-        #
-        #print(self.whoseTurn())
+
+        #becomes all spaces that are tied to the end of a chain
         children = self.getChains()
         # counter = 0
         # if children:
@@ -64,11 +55,11 @@ class Board():
         #         print("chains ", counter, " x: ", chainSpace.getPosition()[0], " y: ", chainSpace.getPosition()[1])
         #         counter +=1
 
+        #if there are no chains, get all the spaces adjacent to all already placed tiles
         if not children:
             for tile in self.getSpaces():
-                # if(self.getSpaces()[i*j].getIsFilled() == False):
-                #print i*j
 
+                #initialize if there is a valid space
                 upLeft = -1
                 up = -1
                 upRight = -1
@@ -79,18 +70,22 @@ class Board():
                 downRight = -1
                 check = False
 
-
+                #skips repeat spaces
                 if children:
                     for chainSpace in children:
                         if(chainSpace.getPosition() == tile.getPosition()):
                             check = True
 
+                #if space is not a repeat, get adjacent nodes
                 if(check != True):
                     if not tile.getIsFilled():
 
+                        #gets position of an already placed stone
                         currentPosX = tile.getPosition()[0]
                         currentPosY = tile.getPosition()[1]
                         currentPos = ((tile.getPosition()[1]-1)*15) + (tile.getPosition()[0]-1)
+
+                        #keep track if there is a valid space in all directions
                         if(currentPosX -1 > 0 and currentPosY -1 > 0):
                             upLeft = currentPos -16
                         if(currentPosY -1 > 0):
@@ -109,6 +104,7 @@ class Board():
                             downRight = currentPos + 16
 
 
+                        #if valid space, and its an empty space, add space to potential spaces
                         if(upLeft != -1):
                             if(self.getSpaces()[upLeft].getOccupiedBy() != 2):
                                 children.append(tile)
@@ -133,15 +129,18 @@ class Board():
                         if (downRight != -1):
                             if (self.getSpaces()[downRight].getOccupiedBy() != 2):
                                 children.append(tile)
-        # print children
         return children
 
+    #minimax function and returns the best space
     def minimax(self):
+        #get the start time of minimax
         global startTime
         startTime = time.time()
+
         #get all potential next moves
         potentialPositions = self.getChildren()
 
+        #print potential spaces for checking
         counter = 0
         for potential in potentialPositions:
             print(counter, " x: ", potential.getPosition()[0], " y: ", potential.getPosition()[1])
@@ -182,22 +181,16 @@ class Board():
 
 
 
-
+    #returns the worst possible space eval value
     def minMove(self, branch, alpha):
-        #print "here1"
-        #check if game is done whether its a tie or someone wins
-        # self.checkComplete()
-        #if game is complete, return the value of the gamestate
-        #if opponent wins, the value will be small,
-        #if player wins, value will be larger
-        # if self.getIsComplete() == true:
-        #     return  evaluation(self)
+
+        #check if the time checking nodes is under 9 seconds and returns if greater meaning its time to place a move
         global startTime
         if time.time()-startTime>8:
             return float('-inf')
 
+        #if minimax is on it's 3rd branch, evaluate the next nodes and return the eval function
         if branch == 2:
-            #print self.evaluation()
             return self.evaluation()
 
         #get all potential next moves of self
@@ -239,30 +232,23 @@ class Board():
 
 
 
+    #returns the best possible space eval value
     def maxMove(self, branch, alpha):
 
-        #check if game is done whether its a tie or someone wins
-        # self.checkComplete()
-        #if game is complete, return the value of the gamestate
-        #if opponent wins, the value will be small,
-        #if player wins, value will be larger
-        # if self.getIsComplete()
-            #create a copy of the selfstate with the position now filled == true:
-        #     return  evaluation(self)
-
+        #check if the time checking nodes is under 9 seconds and returns if greater meaning its time to place a move
         global startTime
         if time.time() - startTime > 8:
             return float('inf')
+
+        #if minimax is on it's 3rd branch, evaluate the next nodes and return the eval function
         if branch == 2:
             return self.evaluation()
 
-        #print "here2"
         #get all potential next moves of self
         potentialPositions = self.getChildren()
 
 
         #variables to return the best move
-
         currentBest = potentialPositions[0]
         currentBestValue = float('-inf')
 
@@ -295,42 +281,44 @@ class Board():
         return currentBestValue
 
 
+    #evaluates the board state based on rows, columns, and diagonals with no opponent spaces blocking their chains
     def evaluation(self):
 
         value = None
 
-        #find number of rows, columns, and diagonals with 5 black in a row and no white next to it
         num5Black = 0
         num4Black = 0
         num3Black = 0
         num2Black = 0
         num1Black = 0
-
-        #find number of rows, columns, and diagonals with 5 white in a row and not black  next to it
         num5White = 0
         num4White = 0
         num3White = 0
         num2White = 0
         num1White = 0
 
+        #find number of rows, columns, and diagonals with 5 black in a row and no white next to it
         b1, b2, b3, b4, b5 = self.checkHoriz(0)
         num1Black += b1
         num2Black += b2
         num3Black += b3
         num4Black += b4
         num5Black += b5
+        #find number of rows, columns, and diagonals with 4 black in a row and no white next to it
         b1, b2, b3, b4, b5 = self.checkVert(0)
         num1Black += b1
         num2Black += b2
         num3Black += b3
         num4Black += b4
         num5Black += b5
+        #find number of rows, columns, and diagonals with 3 black in a row and no white next to it
         b1, b2, b3, b4, b5 = self.checkDiag1(0)
         num1Black += b1
         num2Black += b2
         num3Black += b3
         num4Black += b4
         num5Black += b5
+        #find number of rows, columns, and diagonals with 2 black in a row and no white next to it
         b1,  b2, b3, b4, b5 = self.checkDiag2(0)
         num1Black += b1
         num2Black += b2
@@ -338,24 +326,28 @@ class Board():
         num4Black += b4
         num5Black += b5
 
+        #find number of rows, columns, and diagonals with 5 white in a row and not black  next to it
         w1, w2, w3, w4, w5 = self.checkHoriz(1)
         num1White += w1
         num2White += w2
         num3White += w3
         num4White += w4
         num5White += w5
+        #find number of rows, columns, and diagonals with 4 white in a row and not black  next to it
         w1, w2, w3, w4, w5 = self.checkVert(1)
         num1White += w1
         num2White += w2
         num3White += w3
         num4White += w4
         num5White += w5
+        #find number of rows, columns, and diagonals with 3 white in a row and not black  next to it
         w1, w2, w3, w4, w5 = self.checkDiag1(1)
         num1White += w1
         num2White += w2
         num3White += w3
         num4White += w4
         num5White += w5
+        #find number of rows, columns, and diagonals with 2 white in a row and not black  next to it
         w1, w2, w3, w4, w5 = self.checkDiag2(1)
         num1White += w1
         num2White += w2
@@ -364,7 +356,7 @@ class Board():
         num5White += w5
 
 
-
+        #if game has possibility of ending with that space, choose that move
         if num5Black > 0 and self.whoseTurn() == 0:
             return float('inf')
         elif num5Black > 0 and self.whoseTurn() == 1:
@@ -374,12 +366,12 @@ class Board():
         elif num5White > 0 and self.whoseTurn() == 1:
             return float('inf')
         else:
+            #eval function
             value = (1000000000 * num4Black + 1000000 * num3Black + 1000 * num2Black + num1Black) - (1000000000 * num4White + 1000000 * num3White + 1000 * num2White + num1White) #evaluation function
-
 
         return value
 
-    #check horizontal
+    #check horizontal chains with no stones blocking it
     def checkHoriz(self, turn):
 
         hcount1 = 0
@@ -389,7 +381,7 @@ class Board():
         hcount5 = 0
         horizontalCount = 0
 
-        #go through eat space and check which ones are viable
+        #go througheachspace and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
@@ -529,7 +521,7 @@ class Board():
         #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (hcount1, hcount2, hcount3, hcount4, hcount5)
 
-    #check vertical
+    #check vertical chains with no stones blocking it
     def checkVert(self, turn):
 
         vcount1 = 0
@@ -539,7 +531,7 @@ class Board():
         vcount5 = 0
         verticalCount = 0
 
-        #go through eat space and check which ones are viable
+        #go througheachspace and check which ones are viable
         for space in range(0,225):
             if (self.getSpaces()[space].getOccupiedBy() == turn):
                 #look at spaces 0 down 4 up
@@ -678,7 +670,7 @@ class Board():
         #returns the number of vertical rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (vcount1, vcount2, vcount3, vcount4, vcount5)
 
-    #check \ vertical
+    #check diagonal (\) chains with no stones blocking it
     def checkDiag1(self, turn):
 
         dcount1 = 0
@@ -688,7 +680,7 @@ class Board():
         dcount5 = 0
         diagonalCount = 0
 
-        #go through eat space and check which ones are viable
+        #go througheachspace and check which ones are viable
         for space in range(0,225):
             if (self.getSpaces()[space].getOccupiedBy() == turn):
                 #look at spaces 0 rightDown 4 leftUp
@@ -827,7 +819,7 @@ class Board():
         #returns the number of vertical rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (dcount1, dcount2, dcount3, dcount4, dcount5)
 
-    #check / diagonal
+    #check diagonal (/) chains with no stones blocking it
     def checkDiag2(self, turn):
 
         dcount1 = 0
@@ -837,7 +829,7 @@ class Board():
         dcount5 = 0
         diagonalCount = 0
 
-        #go through eat space and check which ones are viable
+        #go througheachspace and check which ones are viable
         for space in range(0,225):
             if (self.getSpaces()[space].getOccupiedBy() == turn):
                 #look at spaces 0 rightDown 4 rightUp
@@ -976,8 +968,10 @@ class Board():
         #returns the number of vertical rows that have a chance of winning and have 2, 3, 4, or 5 columns
         return (dcount1, dcount2, dcount3, dcount4, dcount5)
 
+    #returns list of spaces to look at based on chains
     def getChains(self):
 
+        #get whose turn  it is
         turn = self.whoseTurn()
         opp = abs(turn-1)
 
@@ -1010,6 +1004,7 @@ class Board():
         singles = []
 
 
+        #find all spaces on the ends of 4 chains
         tempHoriz4 = self.chainHoriz4(turn)
         tempVert4 = self.chainVert4(turn)
         tempDiag14 = self.chainDiag14(turn)
@@ -1019,7 +1014,7 @@ class Board():
         tempDiag14w = self.chainDiag14(opp)
         tempDiag24w = self.chainDiag24(opp)
 
-
+        #add spaces to the chainlist
         if tempHoriz4:
             for element in tempHoriz4:
                 chainList.append(element)
@@ -1046,7 +1041,7 @@ class Board():
                 chainList.append(element)
 
         if not chainList:
-            print('chain3')
+            #find all spaces on the ends of 3 chains
             tempHoriz3 = self.chainHoriz3(turn)
             tempVert3 = self.chainVert3(turn)
             tempDiag13 = self.chainDiag13(turn)
@@ -1056,6 +1051,7 @@ class Board():
             tempDiag13w = self.chainDiag13(opp)
             tempDiag23w = self.chainDiag23(opp)
 
+            #add spaces to the chainlist
             if tempHoriz3w:
                 for element in tempHoriz3w:
                     chainList.append(element)
@@ -1082,7 +1078,7 @@ class Board():
                     chainList.append(element)
 
         if not chainList:
-            print("chain2")
+            #find all spaces on the ends of 2 chains
             tempHoriz2 = self.chainHoriz2(turn)
             tempVert2 = self.chainVert2(turn)
             tempDiag12 = self.chainDiag12(turn)
@@ -1092,6 +1088,7 @@ class Board():
             tempDiag12w = self.chainDiag12(opp)
             tempDiag22w = self.chainDiag22(opp)
 
+            #add spaces to the chainlist
             if tempHoriz2w:
                 for element in tempHoriz2w:
                     chainList.append(element)
@@ -1118,15 +1115,14 @@ class Board():
                     chainList.append(element)
 
 
-
+        #if no 4, 3, 2 chains, get spaces that are adjacent to one of your tiles
         if not chainList:
-            print("singles")
             chainList = self.getSingles();
 
+
+        #gets rid of repeated spaces in the chainlist
         if chainList:
             for element in chainList:
-                # print("begining x: ", element.getPosition()[0], " y: ", element.getPosition()[1])
-
                 tempList.append((element.getPosition()[0]-1) + (element.getPosition()[1]-1)*15)
 
             tempList = list(set(tempList))
@@ -1138,29 +1134,33 @@ class Board():
         return chainList
 
 
-        #check horizontal
+    #returns empty spaces on the ends of the horizonal 2 chains
     def chainHoriz2(self, turn):
         left = False
         right = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go through each space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 right 1 left
                 if (self.getSpaces()[space].getPosition()[0]-2)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
                     left1=self.getSpaces()[space-1].getOccupiedBy()
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+
+                    #if space to the left is your stone, get space to right
                     if (left1 == turn):
                         left = True
 
+                #look at spaces 1 right 0 left
                 if((15-self.getSpaces()[space].getPosition()[0])>0 and (self.getSpaces()[space].getPosition()[0]-1)>0):
                     right1=self.getSpaces()[space+1].getOccupiedBy()
 
+                    #if space to the right is your stone, get space to left
                     if (right1 == turn):
                         right = True
 
+                #add space in the opposite direction if not filled
                 if(left):
                     if(self.getSpaces()[space+1].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+1])
@@ -1168,33 +1168,38 @@ class Board():
                      if(self.getSpaces()[space-1].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-1])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
-            #check horizontal
+    
+    #returns empty spaces on the ends of the horizonal 3 chains
     def chainHoriz3(self, turn):
         left = False
         right = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go through each space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 down 2 up
                 if (self.getSpaces()[space].getPosition()[0]-2)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
                     left1=self.getSpaces()[space-1].getOccupiedBy()
                     left2=self.getSpaces()[space-2].getOccupiedBy()
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+
+                    #if 2 spaces left are all your stone, get space to right
                     if (left1 == turn and left2 == turn):
                         left = True
 
+                #look at spaces 2 right 0 left
                 if((15-self.getSpaces()[space].getPosition()[0])>1 and (self.getSpaces()[space].getPosition()[0]-1)>0):
                     right1=self.getSpaces()[space+1].getOccupiedBy()
                     right2=self.getSpaces()[space+2].getOccupiedBy()
 
+                    #if 2 spaces to the right are all your stone, get space to left
                     if (right1 == turn and right2 == turn):
                         right = True
 
+                #add space in the opposite direction if not filled
                 if(left):
                     print(space)
                     if(self.getSpaces()[space+1].getOccupiedBy() == 2):
@@ -1203,36 +1208,40 @@ class Board():
                      if(self.getSpaces()[space-1].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-1])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
 
+    #returns empty spaces on the ends of the horizonal 4 chains
     def chainHoriz4(self, turn):
         left = False
         right = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go througheachspace and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 right 3 left
                 if (self.getSpaces()[space].getPosition()[0]-3)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
                     left1=self.getSpaces()[space-1].getOccupiedBy()
                     left2=self.getSpaces()[space-2].getOccupiedBy()
                     left3=self.getSpaces()[space-3].getOccupiedBy()
 
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+                    #if 3 spaces left are all your stone, get space to right
                     if (left1 == turn and left2 == turn and left3 == turn):
                         left = True
 
+                #look at spaces 3 right 0 left
                 if((15-self.getSpaces()[space].getPosition()[0])>2 and (self.getSpaces()[space].getPosition()[0]-1)>0):
                     right1=self.getSpaces()[space+1].getOccupiedBy()
                     right2=self.getSpaces()[space+2].getOccupiedBy()
                     right3=self.getSpaces()[space+3].getOccupiedBy()
 
+                    #if 3 spaces to the right are all your stone, get space to left
                     if (right1 == turn and right2 == turn and right3 == turn):
                         right = True
 
+                #add space in the opposite direction if not filled
                 if(left):
                     if(self.getSpaces()[space+1].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+1])
@@ -1240,32 +1249,36 @@ class Board():
                      if(self.getSpaces()[space-1].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-1])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
 
-        #check horizontal
+    #returns empty spaces on the ends of the vertical 2 chains
     def chainVert2(self, turn):
         up = False
         down = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go through each space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 down 1 up
                 if (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     up1=self.getSpaces()[space-15].getOccupiedBy()
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+
+                    #if space up is your stone, get space down
                     if (up1 == turn):
                         up = True
 
+                #look at spaces 1 down 0 up
                 if((15-self.getSpaces()[space].getPosition()[1])>0 and (self.getSpaces()[space].getPosition()[1]-1)>0):
                     down1=self.getSpaces()[space+15].getOccupiedBy()
 
+                    #if space down is your stone, get space up
                     if (down1 == turn):
                         down = True
 
+                #add space in the opposite direction if not filled
                 if(up):
                     if(self.getSpaces()[space+15].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+15])
@@ -1273,33 +1286,38 @@ class Board():
                      if(self.getSpaces()[space-15].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-15])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
 
+    #returns empty spaces on the ends of the vertical 3 chains
     def chainVert3(self, turn):
         up = False
         down = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go through each space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 down 2 up
                 if (self.getSpaces()[space].getPosition()[1]-2)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     up1=self.getSpaces()[space-15].getOccupiedBy()
                     up2=self.getSpaces()[space-30].getOccupiedBy()
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+
+                    #if 2 spaces up are all your stone, get space down
                     if (up1 == turn and up2 == turn):
                         up = True
 
+                #look at spaces 2 down 0 up
                 if((15-self.getSpaces()[space].getPosition()[1])>1 and (self.getSpaces()[space].getPosition()[1]-1)>0):
                     down1=self.getSpaces()[space+15].getOccupiedBy()
                     down2=self.getSpaces()[space+30].getOccupiedBy()
 
+                    #if 2 spaces up are all your stone, get space down
                     if (down1 == turn and down2 == turn):
                         down = True
 
+                #add space in the opposite direction if not filled
                 if(up):
                     if(self.getSpaces()[space+15].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+15])
@@ -1307,35 +1325,40 @@ class Board():
                      if(self.getSpaces()[space-15].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-15])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
 
+    #returns empty spaces on the ends of the vertical 4 chains
     def chainVert4(self, turn):
         up = False
         down = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go through each space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 down 3 up
                 if (self.getSpaces()[space].getPosition()[1]-3)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     up1=self.getSpaces()[space-15].getOccupiedBy()
                     up2=self.getSpaces()[space-30].getOccupiedBy()
                     up3=self.getSpaces()[space-45].getOccupiedBy()
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+
+                    #if 3 spaces up are all your stone, get space down
                     if (up1 == turn and up2 == turn and up3 == turn):
                         up = True
 
+                #look at spaces 3 down 0 up
                 if((15-self.getSpaces()[space].getPosition()[1])>2 and (self.getSpaces()[space].getPosition()[1]-1)>0):
                     down1=self.getSpaces()[space+15].getOccupiedBy()
                     down2=self.getSpaces()[space+30].getOccupiedBy()
                     down3=self.getSpaces()[space+45].getOccupiedBy()
 
+                    #if 3 spaces up are all your stone, get space down
                     if (down1 == turn and down2 == turn and down3 == turn):
                         down = True
 
+                #add space in the opposite direction if not filled
                 if(up):
                     print(space)
                     if(self.getSpaces()[space+15].getOccupiedBy() == 2):
@@ -1344,32 +1367,36 @@ class Board():
                      if(self.getSpaces()[space-15].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-15])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
 
-
+    #returns empty spaces on the ends of the diagonal (\) 2 chains
     def chainDiag12(self, turn):
         upLeft = False
         downRight = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go through each space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 downRight 1 upLeft
                 if (self.getSpaces()[space].getPosition()[0]-1)>0 and (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     upLeft1=self.getSpaces()[space-16].getOccupiedBy()
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+
+                    #if space upLeft is your stone, get space downRight
                     if (upLeft1 == turn):
                         upLeft = True
 
+                #look at spaces 1 downRight 0 upLeft
                 if((15-self.getSpaces()[space].getPosition()[0])>0 and (15-self.getSpaces()[space].getPosition()[1])>0 and self.getSpaces()[space].getPosition()[0]-1)>0 and (self.getSpaces()[space].getPosition()[1]-1)>0:
                     downRight1=self.getSpaces()[space+16].getOccupiedBy()
 
+                    #if space downRight is your stone, get space upLeft
                     if (downRight1 == turn):
                         downRight = True
 
+                #add space in the opposite direction if not filled
                 if(upLeft):
                     if(self.getSpaces()[space+16].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+16])
@@ -1377,34 +1404,38 @@ class Board():
                      if(self.getSpaces()[space-16].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-16])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
 
-
+    #returns empty spaces on the ends of the diagonal (\) 3 chains
     def chainDiag13(self, turn):
         upLeft = False
         downRight = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go through each space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 downRight 2 upLeft
                 if (self.getSpaces()[space].getPosition()[0]-2)>0 and (self.getSpaces()[space].getPosition()[1]-2)>0 and (15-self.getSpaces()[space].getPosition()[0])>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     upLeft1=self.getSpaces()[space-16].getOccupiedBy()
                     upLeft2=self.getSpaces()[space-32].getOccupiedBy()
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+
+                    #if 2 spaces upLeft are all your stone, get space to downRight
                     if (upLeft1 == turn and upLeft2 == turn):
                         upLeft = True
 
+                #look at spaces 2 downRight 0 upLeft
                 if((15-self.getSpaces()[space].getPosition()[0])>1 and (15-self.getSpaces()[space].getPosition()[1])>1 and self.getSpaces()[space].getPosition()[0]-1)>0 and (self.getSpaces()[space].getPosition()[1]-1)>0:
                     downRight1=self.getSpaces()[space+16].getOccupiedBy()
                     downRight2=self.getSpaces()[space+32].getOccupiedBy()
 
+                    #if 2 spaces downRight are all your stone, get space upLeft
                     if (downRight1 == turn and downRight2 == turn):
                         downRight = True
 
+                #add space in the opposite direction if not filled
                 if(upLeft):
                     if(self.getSpaces()[space+16].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+16])
@@ -1412,35 +1443,40 @@ class Board():
                      if(self.getSpaces()[space-16].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-16])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
 
+    #returns empty spaces on the ends of the diagonal (\) 4 chains
     def chainDiag14(self, turn):
         upLeft = False
         downRight = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go through each space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 downRight 3 upLeft
                 if (self.getSpaces()[space].getPosition()[0]-3)>0 and (self.getSpaces()[space].getPosition()[1]-3)>0 and (15-self.getSpaces()[space].getPosition()[0])>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     upLeft1=self.getSpaces()[space-16].getOccupiedBy()
                     upLeft2=self.getSpaces()[space-32].getOccupiedBy()
                     upLeft3=self.getSpaces()[space-48].getOccupiedBy()
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+
+                    #if 3 spaces upLeft are all your stone, get space to downRight
                     if (upLeft1 == turn and upLeft2 == turn and upLeft3 == turn):
                         upLeft = True
 
+                #look at spaces 3 downRight 0 upLeft
                 if((15-self.getSpaces()[space].getPosition()[0])>2 and (15-self.getSpaces()[space].getPosition()[1])>2 and self.getSpaces()[space].getPosition()[0]-1)>0 and (self.getSpaces()[space].getPosition()[1]-1)>0:
                     downRight1=self.getSpaces()[space+16].getOccupiedBy()
                     downRight2=self.getSpaces()[space+32].getOccupiedBy()
                     downRight3=self.getSpaces()[space+48].getOccupiedBy()
 
+                    #if 3 spaces downRight are all your stone, get space upLeft
                     if (downRight1 == turn and downRight2 == turn and downRight3 == turn):
                         downRight = True
 
+                #add space in the opposite direction if not filled
                 if(upLeft):
                     if(self.getSpaces()[space+16].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+16])
@@ -1448,32 +1484,36 @@ class Board():
                      if(self.getSpaces()[space-16].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-16])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
 
-
+    #returns empty spaces on the ends of the diagonal (/) 2 chains
     def chainDiag22(self, turn):
         upRight = False
         downLeft = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go through each space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 downLeft 1 upRight
                 if (self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0 and (self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     upRight1=self.getSpaces()[space-14].getOccupiedBy()
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+
+                    #if space upRight is your stone, get space downLeft
                     if (upRight1 == turn):
                         upRight = True
 
+                #look at spaces 1 downLeft 0 upRight
                 if((self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0 and self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
                     downLeft1=self.getSpaces()[space+14].getOccupiedBy()
 
+                    #if space downLeft is stone, get space upRight
                     if (downLeft1 == turn):
                         downLeft = True
 
+                #add space in the opposite direction if not filled
                 if(upRight):
                     if(self.getSpaces()[space+14].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+14])
@@ -1481,33 +1521,38 @@ class Board():
                      if(self.getSpaces()[space-14].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-14])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
 
+    #returns empty spaces on the ends of the diagonal (/) 3 chains
     def chainDiag23(self, turn):
         upRight = False
         downLeft = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go through each space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 downLeft 2 upRight
                 if (self.getSpaces()[space].getPosition()[1]-2)>0 and (15-self.getSpaces()[space].getPosition()[0])>1 and (self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     upRight1=self.getSpaces()[space-14].getOccupiedBy()
                     upRight2=self.getSpaces()[space-28].getOccupiedBy()
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+
+                    #if 2 spaces upRight are all you stone, get space to downLeft
                     if (upRight1 == turn and upRight2 == turn):
                         upRight = True
 
+                #look at spaces 2 downLeft 0 upRight
                 if((self.getSpaces()[space].getPosition()[0]-2)>0 and (15-self.getSpaces()[space].getPosition()[1])>1 and self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
                     downLeft1=self.getSpaces()[space+14].getOccupiedBy()
                     downLeft2=self.getSpaces()[space+28].getOccupiedBy()
 
+                    #if 2 spaces downLeft are all your stone, get space upRight
                     if (downLeft1 == turn and downLeft2 == turn):
                         downLeft = True
 
+                #add space in the opposite direction if not filled
                 if(upRight):
                     if(self.getSpaces()[space+14].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+14])
@@ -1515,35 +1560,40 @@ class Board():
                      if(self.getSpaces()[space-14].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-14])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
 
+    #returns empty spaces on the ends of the diagonal (/) 4 chains
     def chainDiag24(self, turn):
         upRight = False
         downLeft = False
         chainList = []
 
-        #go through eat space and check which ones are viable
+        #go through each space and check which ones are viable
         for space in range(0,225):
             if(self.getSpaces()[space].getOccupiedBy() == turn):
 
-                #look at spaces 0 right 4 left
+                #look at spaces 0 downLeft 3 upRight
                 if (self.getSpaces()[space].getPosition()[1]-3)>0 and (15-self.getSpaces()[space].getPosition()[0])>2 and (self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0:
                     upRight1=self.getSpaces()[space-14].getOccupiedBy()
                     upRight2=self.getSpaces()[space-28].getOccupiedBy()
                     upRight3=self.getSpaces()[space-42].getOccupiedBy()
-                    #check to make sure all these spaces are either blank or the color of the player whose turn it is
+
+                    #if 3 spaces upRight are all you stone, get space to downLeft
                     if (upRight1 == turn and upRight2 == turn and upRight3 == turn):
                         upRight = True
 
+                #look at spaces 3 downLeft 0 upRight
                 if((self.getSpaces()[space].getPosition()[0]-3)>0 and (15-self.getSpaces()[space].getPosition()[1])>2 and self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
                     downLeft1=self.getSpaces()[space+14].getOccupiedBy()
                     downLeft2=self.getSpaces()[space+28].getOccupiedBy()
                     downLeft3=self.getSpaces()[space+42].getOccupiedBy()
 
+                    #if 3 spaces downLeft are all your stone, get space upRight
                     if (downLeft1 == turn and downLeft2 == turn and downLeft3 == turn):
                         downLeft = True
 
+                #add space in the opposite direction if not filled
                 if(upRight):
                     if(self.getSpaces()[space+14].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space+14])
@@ -1551,12 +1601,13 @@ class Board():
                      if(self.getSpaces()[space-14].getOccupiedBy() == 2):
                         chainList.append(self.getSpaces()[space-14])
 
-        #returns the number of horizontal rows that have a chance of winning and have 2, 3, 4, or 5 columns
+        #returns list of spaces at end of chain
         return (chainList)
 
-
+    #returns empty spaces on the adjacent to one of your stones
     def getSingles(self):
 
+        #get whose turn  it is
         turn = self.whoseTurn()
         children = []
 
@@ -1574,9 +1625,12 @@ class Board():
 
             if not tile.getIsFilled():
 
+                #get position of empty space
                 currentPosX = tile.getPosition()[0]
                 currentPosY = tile.getPosition()[1]
                 currentPos = ((tile.getPosition()[1]-1)*15) + (tile.getPosition()[0]-1)
+
+                #find spaces that are valid
                 if(currentPosX -1 > 0 and currentPosY -1 > 0):
                     upLeft = currentPos -16
                 if(currentPosY -1 > 0):
@@ -1595,37 +1649,30 @@ class Board():
                     downRight = currentPos + 16
 
 
+                #add space to list if adjacent to one of your stones
                 if(upLeft != -1):
                     if(self.getSpaces()[upLeft].getOccupiedBy() != 2 and self.getSpaces()[upLeft].getOccupiedBy() == turn):
-                        #print("upLeft", self.getSpaces()[upLeft].getOccupiedBy(), " current turn ", turn)
                         children.append(tile)
                 if(up != -1):
                     if (self.getSpaces()[up].getOccupiedBy() != 2 and self.getSpaces()[up].getOccupiedBy() == turn):
-                        #print("up", self.getSpaces()[up].getOccupiedBy(), " current turn ", turn)
                         children.append(tile)
                 if (upRight != -1):
                     if (self.getSpaces()[upRight].getOccupiedBy() != 2 and self.getSpaces()[upRight].getOccupiedBy() == turn):
-                        #print("upRight", self.getSpaces()[upRight].getOccupiedBy(), " current turn ", turn)
                         children.append(tile)
                 if (left != -1):
                     if (self.getSpaces()[left].getOccupiedBy() != 2 and self.getSpaces()[left].getOccupiedBy() == turn):
-                        #print("left", self.getSpaces()[left].getOccupiedBy(), " current turn ", turn)
                         children.append(tile)
                 if (right != -1):
                     if (self.getSpaces()[right].getOccupiedBy() != 2 and self.getSpaces()[right].getOccupiedBy() == turn):
-                        #print("right", self.getSpaces()[right].getOccupiedBy(), " current turn ", turn)
                         children.append(tile)
                 if (downLeft != -1):
                     if (self.getSpaces()[downLeft].getOccupiedBy() != 2 and self.getSpaces()[downLeft].getOccupiedBy() == turn):
-                        #print("downLeft", self.getSpaces()[downLeft].getOccupiedBy(), " current turn ", turn)
                         children.append(tile)
                 if (down != -1):
                     if (self.getSpaces()[down].getOccupiedBy() != 2 and self.getSpaces()[down].getOccupiedBy() == turn):
-                        #print("down", self.getSpaces()[down].getOccupiedBy(), " current turn ", turn)
                         children.append(tile)
                 if (downRight != -1):
                     if (self.getSpaces()[downRight].getOccupiedBy() != 2 and self.getSpaces()[downRight].getOccupiedBy() == turn):
-                        #print("downRight", self.getSpaces()[downRight].getOccupiedBy(), " current turn ", turn)
                         children.append(tile)
 
         return children
