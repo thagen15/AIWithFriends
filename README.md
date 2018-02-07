@@ -25,7 +25,8 @@ Our program was written in Python. To run the program one needs to have python i
 
 ## Utility Function:
 
-Utility Function refers to the sum of preferences our agent has. In the case of our program the agent wants to have 5 continuous dots in a row, column or diagonal. It also wants to stop the opponent from getting a 5 in a row, and it focuses on that the closer the opponent is to achieving his plan. We made our program play more defensively rather than offensively.
+Utility Function refers to the sum of preferences our agent has. In the case of our program the agent wants to have 5 continuous dots in a row, column or diagonal. It also wants to stop the opponent from getting a 5 in a row, and it focuses on that the closer the opponent is to achieving his plan. We made our program play more defen
+sively rather than offensively.
 
 ## Evaluation Function:
 
@@ -37,11 +38,13 @@ Utility Function refers to the sum of preferences our agent has. In the case of 
 - All calculations were determined by the number of stones within 5 spaces of a stone
 - Starting at a stone, it looks 4 spaces to the left, 4 spaces to the right, 3 spaces to the left and 1 space to the right, 2 spaces to the left and 2 spaces to the right, 1 space to  the left and 3 spaces to the right and takes the largest chain from  these values. It does not evaluate a chain if there is a stone of the opposite color in any of these scenarios
 
+Our evaluation function can be found in the function evaluation() at line 284 to line 372 of board.py.
+
 ## Heuristics & Strategies:
 
 There are quite some specific actions our program takes:
 
-- When the game starts, if we are choosen to play second we opt to take the opponent's piece only when that is placed between F-6 adn J-10.
+- When the game starts, if we are choosen to play second we opt to take the opponent's piece only when that is placed between F-6 and J-10.
 - If an opponent piece is within 4 spaces of one of our pieces, the program doesn’t evaluate that piece.
 - If an opponent piece is within 4 away from the border our program doesn’t evaluate that piece 4 spaces in that direction.
 - If an opponent piece is within 3 away from the border our program doesn’t evaluate that piece 3 spaces in that direction and 1 space in  the opposite direction.
@@ -53,7 +56,11 @@ There are quite some specific actions our program takes:
  - Will look at chains of 3s after chains of 4 before considering other chains
  - Looks at chains of 2s after chains of 3 before considering other spaces
  - If there are no chains, only looks at spaces that are next to already placed nodes of the same color
-
+ 
+ Our minimax function is found on lines 134 to 281 of board.py
+ Potential spaces can be found on lines 45 to 132 of board.py
+ Our hueristic function is split up into many function between lines 374 to 969 of board.py
+ Chain finders can be found from line 971 to 1678. 
 # Results:
 
 ## Tests:
