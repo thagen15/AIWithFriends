@@ -11,8 +11,6 @@ class Board():
             for x in range(1,16):
                 self.spaces.append(Space(x,y))
 
-        print(len(self.getSpaces()))
-
         self.isFirstTurn = True
         self.isComplete = False
         self.turn = 0
@@ -189,7 +187,7 @@ class Board():
             return float('-inf')
 
         #if minimax is on it's 3rd branch, evaluate the next nodes and return the eval function
-        if branch == 2:
+        if branch == 4:
             return self.evaluation()
 
         #get all potential next moves of self
@@ -240,7 +238,7 @@ class Board():
             return float('inf')
 
         #if minimax is on it's 3rd branch, evaluate the next nodes and return the eval function
-        if branch == 2:
+        if branch == 4:
             return self.evaluation()
 
         #get all potential next moves of self
@@ -1135,8 +1133,6 @@ class Board():
 
     #returns empty spaces on the ends of the horizonal 2 chains
     def chainHoriz2(self, turn):
-        left = False
-        right = False
         chainList = []
 
         #go through each space and check which ones are viable
@@ -1149,7 +1145,8 @@ class Board():
 
                     #if space to the left is your stone, get space to right
                     if (left1 == turn):
-                        left = True
+                        if(self.getSpaces()[space+1].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+1])
 
                 #look at spaces 1 right 0 left
                 if((15-self.getSpaces()[space].getPosition()[0])>0 and (self.getSpaces()[space].getPosition()[0]-1)>0):
@@ -1157,23 +1154,14 @@ class Board():
 
                     #if space to the right is your stone, get space to left
                     if (right1 == turn):
-                        right = True
-
-                #add space in the opposite direction if not filled
-                if(left):
-                    if(self.getSpaces()[space+1].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+1])
-                elif(right):
-                     if(self.getSpaces()[space-1].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-1])
+                        if(self.getSpaces()[space-1].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-1])
 
         #returns list of spaces at end of chain
         return (chainList)
     
     #returns empty spaces on the ends of the horizonal 3 chains
     def chainHoriz3(self, turn):
-        left = False
-        right = False
         chainList = []
 
         #go through each space and check which ones are viable
@@ -1187,7 +1175,8 @@ class Board():
 
                     #if 2 spaces left are all your stone, get space to right
                     if (left1 == turn and left2 == turn):
-                        left = True
+                        if(self.getSpaces()[space+1].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+1])
 
                 #look at spaces 2 right 0 left
                 if((15-self.getSpaces()[space].getPosition()[0])>1 and (self.getSpaces()[space].getPosition()[0]-1)>0):
@@ -1196,24 +1185,14 @@ class Board():
 
                     #if 2 spaces to the right are all your stone, get space to left
                     if (right1 == turn and right2 == turn):
-                        right = True
-
-                #add space in the opposite direction if not filled
-                if(left):
-                    print(space)
-                    if(self.getSpaces()[space+1].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+1])
-                elif(right):
-                     if(self.getSpaces()[space-1].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-1])
+                        if(self.getSpaces()[space-1].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-1])
 
         #returns list of spaces at end of chain
         return (chainList)
 
     #returns empty spaces on the ends of the horizonal 4 chains
     def chainHoriz4(self, turn):
-        left = False
-        right = False
         chainList = []
 
         #go througheachspace and check which ones are viable
@@ -1228,7 +1207,8 @@ class Board():
 
                     #if 3 spaces left are all your stone, get space to right
                     if (left1 == turn and left2 == turn and left3 == turn):
-                        left = True
+                        if(self.getSpaces()[space+1].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+1])
 
                 #look at spaces 3 right 0 left
                 if((15-self.getSpaces()[space].getPosition()[0])>2 and (self.getSpaces()[space].getPosition()[0]-1)>0):
@@ -1238,23 +1218,14 @@ class Board():
 
                     #if 3 spaces to the right are all your stone, get space to left
                     if (right1 == turn and right2 == turn and right3 == turn):
-                        right = True
-
-                #add space in the opposite direction if not filled
-                if(left):
-                    if(self.getSpaces()[space+1].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+1])
-                elif(right):
-                     if(self.getSpaces()[space-1].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-1])
+                        if(self.getSpaces()[space-1].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-1])
 
         #returns list of spaces at end of chain
         return (chainList)
 
     #returns empty spaces on the ends of the vertical 2 chains
     def chainVert2(self, turn):
-        up = False
-        down = False
         chainList = []
 
         #go through each space and check which ones are viable
@@ -1267,7 +1238,8 @@ class Board():
 
                     #if space up is your stone, get space down
                     if (up1 == turn):
-                        up = True
+                        if(self.getSpaces()[space+15].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+15])
 
                 #look at spaces 1 down 0 up
                 if((15-self.getSpaces()[space].getPosition()[1])>0 and (self.getSpaces()[space].getPosition()[1]-1)>0):
@@ -1275,23 +1247,14 @@ class Board():
 
                     #if space down is your stone, get space up
                     if (down1 == turn):
-                        down = True
-
-                #add space in the opposite direction if not filled
-                if(up):
-                    if(self.getSpaces()[space+15].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+15])
-                elif(down):
-                     if(self.getSpaces()[space-15].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-15])
+                        if(self.getSpaces()[space-15].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-15])
 
         #returns list of spaces at end of chain
         return (chainList)
 
     #returns empty spaces on the ends of the vertical 3 chains
     def chainVert3(self, turn):
-        up = False
-        down = False
         chainList = []
 
         #go through each space and check which ones are viable
@@ -1305,7 +1268,8 @@ class Board():
 
                     #if 2 spaces up are all your stone, get space down
                     if (up1 == turn and up2 == turn):
-                        up = True
+                        if(self.getSpaces()[space+15].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+15])
 
                 #look at spaces 2 down 0 up
                 if((15-self.getSpaces()[space].getPosition()[1])>1 and (self.getSpaces()[space].getPosition()[1]-1)>0):
@@ -1314,23 +1278,14 @@ class Board():
 
                     #if 2 spaces up are all your stone, get space down
                     if (down1 == turn and down2 == turn):
-                        down = True
-
-                #add space in the opposite direction if not filled
-                if(up):
-                    if(self.getSpaces()[space+15].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+15])
-                elif(down):
-                     if(self.getSpaces()[space-15].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-15])
+                        if(self.getSpaces()[space-15].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-15])
 
         #returns list of spaces at end of chain
         return (chainList)
 
     #returns empty spaces on the ends of the vertical 4 chains
     def chainVert4(self, turn):
-        up = False
-        down = False
         chainList = []
 
         #go through each space and check which ones are viable
@@ -1345,7 +1300,8 @@ class Board():
 
                     #if 3 spaces up are all your stone, get space down
                     if (up1 == turn and up2 == turn and up3 == turn):
-                        up = True
+                        if(self.getSpaces()[space+15].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+15])
 
                 #look at spaces 3 down 0 up
                 if((15-self.getSpaces()[space].getPosition()[1])>2 and (self.getSpaces()[space].getPosition()[1]-1)>0):
@@ -1355,24 +1311,14 @@ class Board():
 
                     #if 3 spaces up are all your stone, get space down
                     if (down1 == turn and down2 == turn and down3 == turn):
-                        down = True
-
-                #add space in the opposite direction if not filled
-                if(up):
-                    print(space)
-                    if(self.getSpaces()[space+15].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+15])
-                elif(down):
-                     if(self.getSpaces()[space-15].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-15])
+                        if(self.getSpaces()[space-15].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-15])
 
         #returns list of spaces at end of chain
         return (chainList)
 
     #returns empty spaces on the ends of the diagonal (\) 2 chains
     def chainDiag12(self, turn):
-        upLeft = False
-        downRight = False
         chainList = []
 
         #go through each space and check which ones are viable
@@ -1385,7 +1331,8 @@ class Board():
 
                     #if space upLeft is your stone, get space downRight
                     if (upLeft1 == turn):
-                        upLeft = True
+                        if(self.getSpaces()[space+16].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+16])
 
                 #look at spaces 1 downRight 0 upLeft
                 if((15-self.getSpaces()[space].getPosition()[0])>0 and (15-self.getSpaces()[space].getPosition()[1])>0 and self.getSpaces()[space].getPosition()[0]-1)>0 and (self.getSpaces()[space].getPosition()[1]-1)>0:
@@ -1393,23 +1340,14 @@ class Board():
 
                     #if space downRight is your stone, get space upLeft
                     if (downRight1 == turn):
-                        downRight = True
-
-                #add space in the opposite direction if not filled
-                if(upLeft):
-                    if(self.getSpaces()[space+16].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+16])
-                elif(downRight):
-                     if(self.getSpaces()[space-16].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-16])
+                        if(self.getSpaces()[space-16].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-16])
 
         #returns list of spaces at end of chain
         return (chainList)
 
     #returns empty spaces on the ends of the diagonal (\) 3 chains
     def chainDiag13(self, turn):
-        upLeft = False
-        downRight = False
         chainList = []
 
         #go through each space and check which ones are viable
@@ -1423,7 +1361,8 @@ class Board():
 
                     #if 2 spaces upLeft are all your stone, get space to downRight
                     if (upLeft1 == turn and upLeft2 == turn):
-                        upLeft = True
+                        if(self.getSpaces()[space+16].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+16])
 
                 #look at spaces 2 downRight 0 upLeft
                 if((15-self.getSpaces()[space].getPosition()[0])>1 and (15-self.getSpaces()[space].getPosition()[1])>1 and self.getSpaces()[space].getPosition()[0]-1)>0 and (self.getSpaces()[space].getPosition()[1]-1)>0:
@@ -1432,23 +1371,14 @@ class Board():
 
                     #if 2 spaces downRight are all your stone, get space upLeft
                     if (downRight1 == turn and downRight2 == turn):
-                        downRight = True
-
-                #add space in the opposite direction if not filled
-                if(upLeft):
-                    if(self.getSpaces()[space+16].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+16])
-                elif(downRight):
-                     if(self.getSpaces()[space-16].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-16])
+                        if(self.getSpaces()[space-16].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-16])
 
         #returns list of spaces at end of chain
         return (chainList)
 
     #returns empty spaces on the ends of the diagonal (\) 4 chains
     def chainDiag14(self, turn):
-        upLeft = False
-        downRight = False
         chainList = []
 
         #go through each space and check which ones are viable
@@ -1463,7 +1393,8 @@ class Board():
 
                     #if 3 spaces upLeft are all your stone, get space to downRight
                     if (upLeft1 == turn and upLeft2 == turn and upLeft3 == turn):
-                        upLeft = True
+                        if(self.getSpaces()[space+16].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+16])
 
                 #look at spaces 3 downRight 0 upLeft
                 if((15-self.getSpaces()[space].getPosition()[0])>2 and (15-self.getSpaces()[space].getPosition()[1])>2 and self.getSpaces()[space].getPosition()[0]-1)>0 and (self.getSpaces()[space].getPosition()[1]-1)>0:
@@ -1473,23 +1404,14 @@ class Board():
 
                     #if 3 spaces downRight are all your stone, get space upLeft
                     if (downRight1 == turn and downRight2 == turn and downRight3 == turn):
-                        downRight = True
-
-                #add space in the opposite direction if not filled
-                if(upLeft):
-                    if(self.getSpaces()[space+16].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+16])
-                elif(downRight):
-                     if(self.getSpaces()[space-16].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-16])
+                        if(self.getSpaces()[space-16].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-16])
 
         #returns list of spaces at end of chain
         return (chainList)
 
     #returns empty spaces on the ends of the diagonal (/) 2 chains
     def chainDiag22(self, turn):
-        upRight = False
-        downLeft = False
         chainList = []
 
         #go through each space and check which ones are viable
@@ -1502,7 +1424,8 @@ class Board():
 
                     #if space upRight is your stone, get space downLeft
                     if (upRight1 == turn):
-                        upRight = True
+                        if(self.getSpaces()[space+14].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+14])
 
                 #look at spaces 1 downLeft 0 upRight
                 if((self.getSpaces()[space].getPosition()[0]-1)>0 and (15-self.getSpaces()[space].getPosition()[1])>0 and self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
@@ -1510,15 +1433,8 @@ class Board():
 
                     #if space downLeft is stone, get space upRight
                     if (downLeft1 == turn):
-                        downLeft = True
-
-                #add space in the opposite direction if not filled
-                if(upRight):
-                    if(self.getSpaces()[space+14].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+14])
-                elif(downLeft):
-                     if(self.getSpaces()[space-14].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-14])
+                        if(self.getSpaces()[space-14].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-14])
 
         #returns list of spaces at end of chain
         return (chainList)
@@ -1540,7 +1456,8 @@ class Board():
 
                     #if 2 spaces upRight are all you stone, get space to downLeft
                     if (upRight1 == turn and upRight2 == turn):
-                        upRight = True
+                        if(self.getSpaces()[space+14].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+14])
 
                 #look at spaces 2 downLeft 0 upRight
                 if((self.getSpaces()[space].getPosition()[0]-2)>0 and (15-self.getSpaces()[space].getPosition()[1])>1 and self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
@@ -1549,23 +1466,14 @@ class Board():
 
                     #if 2 spaces downLeft are all your stone, get space upRight
                     if (downLeft1 == turn and downLeft2 == turn):
-                        downLeft = True
-
-                #add space in the opposite direction if not filled
-                if(upRight):
-                    if(self.getSpaces()[space+14].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+14])
-                elif(downLeft):
-                     if(self.getSpaces()[space-14].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-14])
+                        if(self.getSpaces()[space-14].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-14])
 
         #returns list of spaces at end of chain
         return (chainList)
 
     #returns empty spaces on the ends of the diagonal (/) 4 chains
     def chainDiag24(self, turn):
-        upRight = False
-        downLeft = False
         chainList = []
 
         #go through each space and check which ones are viable
@@ -1580,7 +1488,8 @@ class Board():
 
                     #if 3 spaces upRight are all you stone, get space to downLeft
                     if (upRight1 == turn and upRight2 == turn and upRight3 == turn):
-                        upRight = True
+                        if(self.getSpaces()[space+14].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space+14])
 
                 #look at spaces 3 downLeft 0 upRight
                 if((self.getSpaces()[space].getPosition()[0]-3)>0 and (15-self.getSpaces()[space].getPosition()[1])>2 and self.getSpaces()[space].getPosition()[1]-1)>0 and (15-self.getSpaces()[space].getPosition()[0])>0:
@@ -1590,15 +1499,8 @@ class Board():
 
                     #if 3 spaces downLeft are all your stone, get space upRight
                     if (downLeft1 == turn and downLeft2 == turn and downLeft3 == turn):
-                        downLeft = True
-
-                #add space in the opposite direction if not filled
-                if(upRight):
-                    if(self.getSpaces()[space+14].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space+14])
-                elif(downLeft):
-                     if(self.getSpaces()[space-14].getOccupiedBy() == 2):
-                        chainList.append(self.getSpaces()[space-14])
+                        if(self.getSpaces()[space-14].getOccupiedBy() == 2):
+                            chainList.append(self.getSpaces()[space-14])
 
         #returns list of spaces at end of chain
         return (chainList)

@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="cbcf5cd5-aa2a-4821-ad2b-f2b0d300bf1c" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change beforePath="$PROJECT_DIR$/board.py" afterPath="$PROJECT_DIR$/board.py" />
-      <change beforePath="$PROJECT_DIR$/history_file" afterPath="$PROJECT_DIR$/history_file" />
-      <change beforePath="$PROJECT_DIR$/testing.py" afterPath="$PROJECT_DIR$/testing.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,8 +16,8 @@
       <file leaf-file-name="board.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/board.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1000">
-              <caret line="373" column="53" lean-forward="false" selection-start-line="373" selection-start-column="46" selection-end-line="373" selection-end-column="53" />
+            <state relative-caret-position="800">
+              <caret line="368" column="53" lean-forward="false" selection-start-line="368" selection-start-column="53" selection-end-line="368" selection-end-column="53" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -46,7 +42,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+              <folding>
+                <marker date="1517962406609" expanded="true" signature="80:155" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -58,6 +56,11 @@
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
+                <marker date="1517962403129" expanded="true" signature="101:3532" ph="..." />
+                <marker date="1517962403129" expanded="true" signature="302:3532" ph="..." />
+                <marker date="1517962403129" expanded="true" signature="387:3532" ph="..." />
+                <marker date="1517962403129" expanded="true" signature="565:3532" ph="..." />
+                <marker date="1517962403129" expanded="true" signature="3500:3532" ph="..." />
               </folding>
             </state>
           </provider>
@@ -70,6 +73,11 @@
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
+                <marker date="1517962410620" expanded="true" signature="101:3779" ph="..." />
+                <marker date="1517962410620" expanded="true" signature="294:3779" ph="..." />
+                <marker date="1517962410620" expanded="true" signature="457:3779" ph="..." />
+                <marker date="1517962410620" expanded="true" signature="651:3779" ph="..." />
+                <marker date="1517962410620" expanded="true" signature="1424:3779" ph="..." />
               </folding>
             </state>
           </provider>
@@ -99,7 +107,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="1218" />
     <option name="y" value="-39" />
     <option name="width" value="1400" />
@@ -169,7 +177,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-16" y="-16" width="3872" height="2092" extended-state="6" />
+    <frame x="-16" y="-16" width="3872" height="2092" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -213,7 +221,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1517962406609" expanded="true" signature="80:155" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -223,6 +233,11 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
+            <marker date="1517962403129" expanded="true" signature="101:3532" ph="..." />
+            <marker date="1517962403129" expanded="true" signature="302:3532" ph="..." />
+            <marker date="1517962403129" expanded="true" signature="387:3532" ph="..." />
+            <marker date="1517962403129" expanded="true" signature="565:3532" ph="..." />
+            <marker date="1517962403129" expanded="true" signature="3500:3532" ph="..." />
           </folding>
         </state>
       </provider>
@@ -233,6 +248,11 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
+            <marker date="1517962410620" expanded="true" signature="101:3779" ph="..." />
+            <marker date="1517962410620" expanded="true" signature="294:3779" ph="..." />
+            <marker date="1517962410620" expanded="true" signature="457:3779" ph="..." />
+            <marker date="1517962410620" expanded="true" signature="651:3779" ph="..." />
+            <marker date="1517962410620" expanded="true" signature="1424:3779" ph="..." />
           </folding>
         </state>
       </provider>
@@ -249,8 +269,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/board.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1000">
-          <caret line="373" column="53" lean-forward="false" selection-start-line="373" selection-start-column="46" selection-end-line="373" selection-end-column="53" />
+        <state relative-caret-position="800">
+          <caret line="368" column="53" lean-forward="false" selection-start-line="368" selection-start-column="53" selection-end-line="368" selection-end-column="53" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
